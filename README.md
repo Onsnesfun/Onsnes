@@ -1,6 +1,8 @@
 <div align="center">
   <img src="Onsnes.png" alt="Onsnes" height="96" />
 
+  CA: https://pump.fun/coin/4vua9xpoTs8LpStpFTbvNATvbintFLkB2rs3Conipump
+
   <h1>Onsnes</h1>
   <p><strong>A Solana token whose price quote is shaped by a piece of math no one alive picked — a Token-2022 transfer hook that holds a Bayesian belief about its own price and updates it on every trade.</strong></p>
 
