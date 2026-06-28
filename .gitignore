@@ -1,0 +1,6 @@
+# local backups / unused assets
+Onsnes_original_backup.png
+BBB.png
+
+# tooling
+.playwright-mcp/

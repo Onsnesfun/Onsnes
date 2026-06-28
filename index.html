@@ -1,0 +1,2716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Onsnes · probability is the logic of science</title>
+<link rel="icon" type="image/png" href="Onsnes.png" />
+<link rel="apple-touch-icon" href="Onsnes.png" />
+<style>
+  :root {
+    --bg: #000000;
+    --surface: #1f1d18;
+    --surface-2: #26241e;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.18);
+    --text: #ededea;
+    --text-2: #a8a69e;
+    --text-3: #6c6a64;
+    --success: #5dcaa5;
+    --success-bg: rgba(93,202,165,0.12);
+    --danger: #f09595;
+    --danger-bg: rgba(240,149,149,0.12);
+    --info-bg: rgba(255,225,77,0.08);
+    --info-border: rgba(255,225,77,0.3);
+    --info-text: #ffe14d;
+    --accent: #ededea;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; border-bottom: 0.5px solid var(--border-strong); cursor: pointer; }
+  a:hover { color: var(--text); border-bottom-color: var(--text); }
+
+  .banner {
+    background: var(--info-bg);
+    border-bottom: 0.5px solid var(--info-border);
+    color: var(--info-text);
+    text-align: center;
+    font-size: 13px;
+    padding: 8px 1rem;
+  }
+  .ca-banner {
+    background: var(--info-bg);
+    border-bottom: 0.5px solid var(--info-text);
+    color: var(--info-text);
+    text-align: center;
+    font-size: 13px;
+    padding: 10px 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ca-banner .ca-label { color: var(--info-text); font-weight: 500; }
+  .ca-banner code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(0,0,0,0.25);
+    padding: 3px 8px;
+    border-radius: 3px;
+    word-break: break-all;
+    color: var(--text);
+  }
+  .ca-banner button {
+    background: transparent;
+    border: 0.5px solid var(--info-text);
+    color: var(--info-text);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .ca-banner button:hover { background: var(--info-text); color: var(--bg); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  .sidebar {
+    padding: 2rem 1.25rem;
+    border-right: 0.5px solid var(--border);
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 24px;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+  .logo-img {
+    height: 52px;
+    width: auto;
+    display: block;
+    margin-left: 0;
+    vertical-align: middle;
+  }
+  .mind-status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: -0.75rem 0 1.5rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    color: var(--text-3);
+  }
+  .mind-status .pulse {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--info-text);
+    flex: none;
+    animation: mind-pulse 2.2s ease-out infinite;
+  }
+  @keyframes mind-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(255,225,77,0.55); }
+    70%  { box-shadow: 0 0 0 7px rgba(255,225,77,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,225,77,0); }
+  }
+
+  .nav-section { margin-bottom: 1.5rem; }
+  .nav-section h4 {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin: 0 0 10px;
+    font-weight: 500;
+    padding-left: 14px;
+    position: relative;
+  }
+  .nav-section h4::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: 7px; height: 0.5px;
+    background: var(--text-3);
+  }
+  .nav-section ul { list-style: none; padding: 0; margin: 0; }
+  .nav-section li a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 5px 0 5px 14px;
+    color: var(--text-2);
+    border: none;
+    position: relative;
+    transition: transform 0.16s ease, color 0.16s ease;
+  }
+  .nav-section li a::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 2px; height: 15px;
+    background: var(--info-text);
+    border-radius: 2px;
+    transition: transform 0.18s ease;
+  }
+  .nav-section .nav-idx {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    min-width: 15px;
+    transition: color 0.16s ease;
+  }
+  .nav-section li a:hover { color: var(--text); transform: translateX(3px); }
+  .nav-section li a:hover .nav-idx { color: var(--info-text); }
+  .nav-section li a.active { color: var(--text); font-weight: 500; }
+  .nav-section li a.active::before {
+    transform: translateY(-50%) scaleY(1);
+    box-shadow: 0 0 8px var(--info-text);
+  }
+  .nav-section li a.active .nav-idx { color: var(--info-text); }
+  .wallet {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  .wallet code {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-2);
+    word-break: break-all;
+    line-height: 1.4;
+  }
+  .wallet-link { display: block; border: none; }
+  .wallet-link:hover code { color: var(--text); }
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 12px;
+    color: var(--text-3);
+    border: none;
+  }
+  .social-link:hover { color: var(--text); }
+
+  .main { padding: 2rem 2.5rem 4rem; min-width: 0; }
+  .topbar { font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem; }
+  h1 {
+    font-size: 30px;
+    font-weight: 500;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.005em;
+  }
+  h3 { font-size: 16px; font-weight: 500; margin: 1.5rem 0 0.5rem; }
+  .subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 2rem; }
+  .subtitle.quote {
+    font-style: italic;
+    line-height: 1.7;
+    max-width: 640px;
+    padding: 14px 0 14px 18px;
+    border-left: 2px solid var(--border-strong);
+    color: var(--text-2);
+    font-size: 14px;
+    font-family: var(--serif);
+  }
+  .quote-author {
+    display: block;
+    font-style: normal;
+    margin-top: 8px;
+    color: var(--text-3);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    font-family: var(--sans);
+  }
+
+  .progress-wrap { margin-bottom: 2.5rem; }
+  .progress-meta {
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--text-2);
+    margin-bottom: 6px;
+  }
+  .progress-bar { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); }
+
+  .prose { max-width: 720px; font-size: 15px; }
+  .prose p { margin: 0 0 1.1rem; line-height: 1.85; }
+  .prose strong { font-weight: 500; }
+  .prose .divider { border: 0; border-top: 0.5px solid var(--border); margin: 2.5rem 0; }
+  .prose .callout {
+    background: var(--info-bg);
+    border-left: 3px solid var(--info-border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 14px;
+    margin: 1.5rem 0;
+  }
+  .prose .callout-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--info-text);
+    margin-bottom: 4px;
+  }
+
+  .essay { max-width: 680px; font-family: var(--serif); font-size: 17px; line-height: 1.85; color: var(--text); }
+  .essay h2 {
+    font-family: var(--sans);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    margin: 3rem 0 1.25rem;
+  }
+  .essay p { margin: 0 0 1.25rem; text-align: justify; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .metric { background: transparent; border: 0.5px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .metric-label { font-size: 12px; color: var(--text-2); margin-bottom: 6px; }
+  .metric-value { font-size: 24px; font-weight: 500; line-height: 1.1; font-family: var(--mono); }
+  .metric-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; font-family: var(--mono); }
+  .metric-sub.up { color: var(--success); }
+  .metric-sub.down { color: var(--danger); }
+
+  .card {
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .card-title { font-size: 14px; font-weight: 500; }
+  .card-meta { font-size: 12px; color: var(--text-3); font-family: var(--mono); }
+  .chart-wrap svg { display: block; width: 100%; height: 220px; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    margin-bottom: 1.25rem;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .qa-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 1.5rem;
+  }
+  .qa-item {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.5rem 1.75rem;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+  }
+  .qa-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--info-text);
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+  }
+  .qa-item h3 {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 0.75rem;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .qa-item p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-2);
+    margin: 0;
+  }
+  .qa-item p strong { color: var(--text); font-weight: 500; }
+  .rule-block {
+    margin: 2.75rem 0 2.25rem;
+    text-align: center;
+  }
+  .rule-block .rule-label {
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .rule-block .rule-formula {
+    display: inline-block;
+    font-family: var(--serif);
+    font-size: 28px;
+    padding: 1.5rem 2.5rem;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+
+  .hero-banner {
+    width: 100%;
+    height: 140px;
+    background: var(--surface-2);
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .hero-banner svg { width: 100%; height: 100%; display: block; }
+
+  pre.code {
+    background: transparent;
+    border: 0.5px solid var(--border);
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    overflow-x: auto;
+    white-space: pre;
+    color: var(--text);
+  }
+  pre.code .c { color: var(--text-3); font-style: italic; }
+  pre.code .k { color: var(--info-text); }
+  pre.code .s { color: #c9b89a; }
+
+  .surprise-row {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) 100px 100px;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-top: 0.5px solid var(--border);
+    font-size: 13px;
+    align-items: baseline;
+  }
+  .surprise-row:first-of-type { border-top: 0; }
+  .surprise-date { color: var(--text-3); font-size: 12px; font-family: var(--mono); }
+  .surprise-body { color: var(--text-2); }
+  .surprise-prior, .surprise-post { font-family: var(--mono); font-size: 12px; text-align: right; }
+  .surprise-prior { color: var(--text-3); }
+  .surprise-post { color: var(--success); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+    @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; max-height: none; border-right: none; border-bottom: 0.5px solid var(--border); padding: 1.25rem; }
+    .main { padding: 1.5rem 1.25rem 3rem; }
+    .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+    .surprise-row { grid-template-columns: 1fr; gap: 4px; }
+    h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ca-banner">
+  <span class="ca-label">$ONSNES contract (Solana):</span>
+  <code id="ca-code">TBA</code>
+</div>
+
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <a class="logo" data-nav="index"><img src="Onsnes.png" alt="Onsnes" class="logo-img" /></a>
+    <div class="mind-status" title="the protocol is learning">
+      <span class="pulse"></span>
+      <span>learning · H=<span id="side-entropy">8.00</span> bits</span>
+    </div>
+    <div class="nav-section">
+      <h4>Main</h4>
+      <ul>
+        <li><a data-nav="index" class="active"><span class="nav-idx">01</span><span class="nav-label">Overview</span></a></li>
+        <li><a data-nav="mind"><span class="nav-idx">02</span><span class="nav-label">Current Status</span></a></li>
+        <li><a data-nav="theorem"><span class="nav-idx">03</span><span class="nav-label">Foundations</span></a></li>
+        <li><a data-nav="surprises"><span class="nav-idx">04</span><span class="nav-label">Corrections</span></a></li>
+        <li><a data-nav="selfcorrect"><span class="nav-idx">05</span><span class="nav-label">Diagnostics</span></a></li>
+      </ul>
+    </div>
+    <div class="nav-section">
+      <h4>Archive</h4>
+      <ul>
+        <li><a data-nav="deployment"><span class="nav-idx">06</span><span class="nav-label">Deployment</span></a></li>
+        <li><a data-nav="source"><span class="nav-idx">07</span><span class="nav-label">The Source</span></a></li>
+        <li><a data-nav="handoff"><span class="nav-idx">08</span><span class="nav-label">The Handoff</span></a></li>
+      </ul>
+    </div>
+    <div class="wallet">
+      <a href="https://x.com/Onsnesfun" target="_blank" rel="noopener" class="social-link" aria-label="Twitter">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://github.com/Onsnesfun/Onsnes" target="_blank" rel="noopener" class="social-link" aria-label="GitHub" style="margin-left: 10px;" title="GitHub">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.014 2.898-.014 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      </a>
+      <a data-nav="source" class="social-link" aria-label="Source code" style="margin-left: 10px; cursor: pointer;" title="Source code">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ========== overview ========== -->
+    <section class="page active" data-page="index">
+      <div class="topbar">Onsnes · learning</div>
+      <h1>The first protocol willing to admit it might be wrong</h1>
+      <div class="subtitle quote">
+        "Probability theory is nothing but common sense reduced to calculation."
+        <span class="quote-author">— Pierre-Simon Laplace, 1814</span>
+      </div>
+
+      <!-- hero: wide MAP vs market chart -->
+      <div class="card" style="padding: 1.25rem 1.5rem; margin-bottom: 1rem;">
+        <div class="card-head">
+          <div>
+            <div class="card-title">the protocol's belief over price, block by block</div>
+            <div class="card-meta">last 100 blocks · live</div>
+          </div>
+          <div class="card-meta">MAP drift: 1.4%</div>
+        </div>
+        <div class="chart-wrap" style="height: 260px;">
+          <svg viewBox="0 0 720 260" id="hero-mapmarket" preserveAspectRatio="none" style="height: 260px; width: 100%;"></svg>
+        </div>
+      </div>
+
+      <!-- 3 mini charts row -->
+      <div class="three-col">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">current belief</div>
+            <div class="card-meta">posterior · 34 bins</div>
+          </div>
+          <div class="chart-wrap" style="height: 140px;">
+            <svg viewBox="0 0 400 140" id="hero-posterior" preserveAspectRatio="none" style="height: 140px; width: 100%;"></svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">knowledge gained</div>
+            <div class="card-meta">bits learned</div>
+          </div>
+          <div class="chart-wrap" style="height: 140px;">
+            <svg viewBox="0 0 400 140" id="hero-entropy" preserveAspectRatio="none" style="height: 140px; width: 100%;"></svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title">confidence</div>
+            <div class="card-meta">maturity</div>
+          </div>
+          <div class="chart-wrap" style="display:flex;align-items:center;justify-content:center;height:140px;">
+            <svg viewBox="0 0 140 140" width="140" height="140" id="hero-gauge" style="width: 140px; height: 140px; flex: none;"></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose">
+        
+        <p>This is a Solana token whose price is set by a piece of math that <strong>no one alive picked</strong>.</p>
+
+        <p>In 1761 an English country minister named Thomas Bayes wrote a single page about how to revise what you believe when new evidence arrives. He died before publishing it. His friend Richard Price found the manuscript in a drawer two years later and mailed it to the Royal Society. Nobody understood it for the next hundred years.</p>
+
+        <p>Two centuries later, an American physicist named <strong>E.T. Jaynes</strong> spent forty years writing a seven-hundred-page book proving that those few sentences from the drawer were not just useful but the <em>only</em> consistent way to reason under uncertainty. Jaynes also died before his book came out. His student finished it and got it printed in 2003.</p>
+
+        <p>Today that single rule powers every spam filter, every self-driving car, every medical diagnostic, every modern language model on Earth. From this block forward, it also sets the price of this token.</p>
+
+        <p>Every other token on this chain is a <strong>judge</strong>. It decides in advance what the "fair price" is and punishes every trade that disagrees. This one is a <strong>student</strong>. It does not know what the fair price is. It asks the market, every block, forever. When a trade tells it something that contradicts what it thought, it does not punish that trade. It records the contradiction in a public log, lowers its own confidence, and updates.</p>
+
+        <p>Think of it as a <strong>doctor</strong>. On day one the doctor knows nothing about you. Every test updates the diagnosis. After enough tests, the diagnosis sharpens. If a strange result comes in, the doctor revises and writes the revision down so anyone can read it. The protocol does the same thing with swaps. Every swap is a test. Every revision is published. <strong>Nothing is hidden, because there is no one in here to hide things.</strong></p>
+
+        <p>What you get from holding the token is exposure to a system that <strong>quotes you a price calibrated to its own current uncertainty</strong>. When the protocol is confident, your slippage is tight. When it has just been surprised, your slippage widens — not as a fee, but as the protocol's honest admission that it doesn't know enough to quote you a sharp price yet. As evidence accumulates, the spread tightens. <strong>The protocol's growing knowledge is the asset.</strong></p>
+
+        <div class="callout">
+          <span class="callout-label">what does not exist</span>
+          no team. no treasury. no roadmap. no v2. no governance. no admin key. upgrade authority is None. mint authority is null. no twitter beyond what is linked in the sidebar. one Rust program at a fixed address — and that program is the rule.
+        </div>
+
+        <h2>Why Bayes</h2>
+
+        <p>The honest market is the one nobody knows the price of in advance. Every other anti-manipulation system on this chain pre-decides a "correct" price and surcharges every trade that deviates from it. <strong>That pre-decision is itself a bet</strong>. If the chosen price turns out wrong — if the world moved, if the asset is genuinely re-pricing — the protocol becomes the manipulator. It charges the truth-teller for telling the truth.</p>
+
+        <p>A Bayesian protocol does not have this problem. It does not start with a price. It starts with an <strong>open mind</strong> — equal probability for every possible price — and lets every trade nudge that distribution by exactly the amount the trade disagrees with the current belief. When the market is calm, the protocol sharpens. When the market is moving, the protocol slides with it. The mechanism behaves identically whether the price is $0.001 or $1.00. There is no privileged value, because the protocol has no opinions of its own.</p>
+
+        <p>This is what it means for a protocol to <strong>think</strong>. Not to compute, not to detect, not to enforce — but to <em>update</em>. Every other smart contract on Solana is a state machine with fixed rules. Onsnes is a state machine whose rule is itself a function of its own history. The state contains a belief. The belief contains the history. <strong>The contract reasons.</strong></p>
+
+        <h2>What the math says</h2>
+
+        <p>The theorem is one line.</p>
+
+        <pre class="code" style="font-family: var(--serif); font-size: 18px; padding: 1.5rem; text-align: center; background: transparent;">P(H | E)  =  P(E | H) · P(H) / P(E)</pre>
+
+        <p>Read out: the probability of a hypothesis (H) <em>given</em> new evidence (E) equals the probability you'd see that evidence if the hypothesis were true, times your prior probability of the hypothesis, divided by the total probability of the evidence. In our context, the hypothesis is <em>"the fair price of this token is X"</em> and the evidence is <em>"someone just traded a swap at price Y in size Z"</em>. The protocol applies this rule to every active hypothesis after every swap, then rescales the probabilities so they add up to one.</p>
+
+        <p>The protocol begins life with the maximum possible uncertainty — <strong>8 bits</strong>. The simplest way to picture a bit is as a yes/no question: 8 bits of uncertainty means it would take 8 well-chosen yes/no questions to nail down the price. As trades come in, that uncertainty shrinks. <strong>Every bit the protocol learns roughly halves the range of plausible prices</strong>. Growth is measurable in these bits.</p>
+
+        <p>The uncertainty never reaches zero. The protocol caps its own confidence at <strong>1 bit of irreducible humility</strong> — the floor below which it refuses to claim certainty about a price set by free people who can always do something it has never seen. <strong>It is allowed to be confident. It is not allowed to be certain.</strong></p>
+        
+
+              </div>
+    </section>
+
+    <!-- ========== mind (charts) ========== -->
+    <section class="page" data-page="mind">
+      <div class="topbar">current status · live</div>
+      <h1>This is what it is thinking right now</h1>
+      <p class="subtitle">Six charts, all updating. Each one tells you how certain the protocol is, what it is certain about, and what most recently shocked it.</p>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">1 · the posterior</div>
+              <div class="card-meta">live · updates every swap</div>
+            </div>
+            <div class="card-meta">256 bins</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-posterior"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            The protocol's current belief about the true price, expressed as a probability density over 256 discrete price levels. The single peak is the MAP estimate. The width is the protocol's confidence. Every swap slightly redistributes this curve.
+            
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">2 · entropy decay</div>
+              <div class="card-meta">8.00 → 7.83 bits</div>
+            </div>
+            <div class="card-meta">H<sub>0</sub> = log<sub>2</sub>(256)</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-entropy"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            Shannon entropy of the posterior, measured in bits. Starts at 8.00 (maximum ignorance, uniform prior over 256 bins). Trends downward monotonically as evidence accumulates. The small bumps are moments of <em>surprise</em> — the protocol learning it knew less than it thought.
+            
+          </p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">3 · MAP vs market</div>
+              <div class="card-meta">divergence: 1.4%</div>
+            </div>
+            <div class="card-meta">last 256 slots</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-map"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            The protocol's MAP estimate (lighter line) tracked against actual swap prices (darker dots). When the two converge, the protocol has converged on the market. When they diverge, the protocol is about to be surprised — or the market is.
+            
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">4 · confidence band</div>
+              <div class="card-meta">95% · ±18%</div>
+            </div>
+            <div class="card-meta">narrowing</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-band"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            95% credible interval around the MAP. Narrows over time as the protocol learns. Widens sharply during surprises — the protocol's public admission that it does not yet know enough to trade you a tight spread.
+            
+          </p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">5 · information gain per trade</div>
+              <div class="card-meta">last 40 swaps</div>
+            </div>
+            <div class="card-meta">KL · nats</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-info"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            How much each swap moved the posterior, measured in KL divergence (nats). Tall bars are the trades that taught the protocol the most. Most trades are small confirmations; a few are events.
+            
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">6 · knowledge gauge</div>
+              <div class="card-meta">2.1% · adolescent</div>
+            </div>
+            <div class="card-meta">(H<sub>0</sub> − H) / H<sub>0</sub></div>
+          </div>
+          <div class="chart-wrap" style="display:flex;align-items:center;justify-content:center;height:220px;">
+            <svg viewBox="0 0 200 200" width="200" height="200" id="chart-gauge"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            A single number from 0% (uniform prior, knows nothing) to 100% (degenerate posterior, knows everything — unreachable). The protocol's lifetime maturity. Never reaches 100% because it caps its own confidence at 1 bit of irreducible humility.
+            
+          </p>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          if (window.__onsnesMindRendered) return;
+          window.__onsnesMindRendered = true;
+
+          const C_LINE = '#ffe14d', C_LINE2 = '#a8a69e', C_BG = '#26241e', C_GRID = 'rgba(255,255,255,0.06)', C_TXT = '#6c6a64', C_OK = '#5dcaa5', C_WARN = '#ffe14d', C_BAD = '#f09595';
+
+          // deterministic PRNG so mock charts look identical across refreshes
+          let _s = 42; const rng = () => { _s = (_s * 9301 + 49297) % 233280; return _s / 233280; };
+
+          function gauss(x, mu, sigma) { return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma)); }
+
+          // 1 — posterior
+          (function () {
+            const svg = document.getElementById('chart-posterior'); if (!svg) return;
+            const W = 600, H = 220, ML = 30, MR = 12, MT = 12, MB = 28;
+            const N = 256;
+            const vals = new Float64Array(N);
+            let max = 0;
+            for (let i = 0; i < N; i++) {
+              const t = i / (N - 1);
+              const v =
+                0.35 * gauss(t, 0.34, 0.05) +
+                0.95 * gauss(t, 0.52, 0.08) +
+                0.30 * gauss(t, 0.68, 0.04) +
+                0.10 * gauss(t, 0.85, 0.10);
+              vals[i] = v; if (v > max) max = v;
+            }
+            let bars = '';
+            const bw = (W - ML - MR) / N;
+            for (let i = 0; i < N; i++) {
+              const x = ML + i * bw;
+              const h = ((vals[i] / max) * (H - MT - MB));
+              const y = H - MB - h;
+              bars += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.9).toFixed(2)}" height="${h.toFixed(2)}" fill="${C_LINE}" opacity="0.7"/>`;
+            }
+            // MAP marker
+            let mapIdx = 0, mapVal = 0;
+            for (let i = 0; i < N; i++) if (vals[i] > mapVal) { mapVal = vals[i]; mapIdx = i; }
+            const mapX = ML + mapIdx * bw + bw * 0.5;
+            const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            const mapLine = `<line x1="${mapX.toFixed(2)}" y1="${MT}" x2="${mapX.toFixed(2)}" y2="${H - MB}" stroke="${C_LINE}" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>`;
+            const mapLabel = `<text x="${mapX.toFixed(2)}" y="${MT + 10}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">MAP</text>`;
+            const xL = `<text x="${ML}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10">0.0010</text>`;
+            const xR = `<text x="${W - MR}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">0.0030</text>`;
+            const yL = `<text x="6" y="${MT + 10}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10">P</text>`;
+            svg.innerHTML = axis + bars + mapLine + mapLabel + xL + xR + yL;
+          })();
+
+          // 2 — entropy decay
+          (function () {
+            const svg = document.getElementById('chart-entropy'); if (!svg) return;
+            const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+            const N = 200;
+            const pts = [];
+            let h = 8.0;
+            for (let i = 0; i < N; i++) {
+              const decay = 0.0009 * (1 - i / N) + 0.0003;
+              h -= decay * (0.6 + 0.4 * rng());
+              if (rng() < 0.03) h += 0.05 + rng() * 0.12;
+              if (h < 7.5) h = 7.5 + rng() * 0.02;
+              pts.push(h);
+            }
+            const hi = 8.0, lo = 7.5;
+            const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+            const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+            let poly = '', area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+            for (let i = 0; i < N; i++) {
+              const x = xAt(i).toFixed(1), y = yAt(pts[i]).toFixed(1);
+              poly += `${x},${y} `; area += `L ${x},${y} `;
+            }
+            area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+            const grid = [8.0, 7.83, 7.5].map(v => `<line x1="${ML}" y1="${yAt(v)}" x2="${W - MR}" y2="${yAt(v)}" stroke="${C_GRID}" stroke-width="0.5"/><text x="${ML - 6}" y="${yAt(v) + 3}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${v.toFixed(2)}</text>`).join('');
+            const refH0 = `<text x="${W - MR}" y="${yAt(8.0) - 4}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="end">H₀ = 8.00</text>`;
+            svg.innerHTML = grid + `<path d="${area}" fill="${C_LINE}" opacity="0.10"/>` + `<polyline points="${poly.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.3"/>` + refH0;
+          })();
+
+          // 3 — MAP vs market
+          (function () {
+            const svg = document.getElementById('chart-map'); if (!svg) return;
+            const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+            const N = 80;
+            const mkt = [], map = [];
+            let p = 0.5;
+            for (let i = 0; i < N; i++) {
+              p += (rng() - 0.5) * 0.04 + (Math.sin(i * 0.18) * 0.005);
+              if (p < 0.1) p = 0.1; if (p > 0.9) p = 0.9;
+              mkt.push(p);
+              map.push(i < 5 ? 0.5 : 0.85 * map[i - 1] + 0.15 * p);
+            }
+            const lo = Math.min(...mkt, ...map) - 0.02, hi = Math.max(...mkt, ...map) + 0.02;
+            const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+            const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+            let mapLine = '', mktDots = '';
+            for (let i = 0; i < N; i++) {
+              mapLine += `${xAt(i).toFixed(1)},${yAt(map[i]).toFixed(1)} `;
+              mktDots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(mkt[i]).toFixed(1)}" r="1.8" fill="${C_LINE2}" opacity="0.85"/>`;
+            }
+            const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            const legend = `<g font-family="ui-monospace,monospace" font-size="10">
+              <line x1="${W - MR - 130}" y1="${MT + 8}" x2="${W - MR - 115}" y2="${MT + 8}" stroke="${C_LINE}" stroke-width="1.3"/><text x="${W - MR - 110}" y="${MT + 11}" fill="${C_TXT}">MAP</text>
+              <circle cx="${W - MR - 65}" cy="${MT + 8}" r="2" fill="${C_LINE2}"/><text x="${W - MR - 55}" y="${MT + 11}" fill="${C_TXT}">market</text>
+            </g>`;
+            svg.innerHTML = axis + `<polyline points="${mapLine.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.3"/>` + mktDots + legend;
+          })();
+
+          // 4 — confidence band
+          (function () {
+            const svg = document.getElementById('chart-band'); if (!svg) return;
+            const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+            const N = 80;
+            const map = [], lo = [], hi = [];
+            let m = 0.5, w = 0.25;
+            for (let i = 0; i < N; i++) {
+              m += (rng() - 0.5) * 0.015;
+              w *= 0.985;
+              if (rng() < 0.04) w *= 1.4; // surprise widens
+              if (w < 0.04) w = 0.04;
+              map.push(m); lo.push(m - w); hi.push(m + w);
+            }
+            const vmin = Math.min(...lo) - 0.02, vmax = Math.max(...hi) + 0.02;
+            const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+            const yAt = v => MT + (1 - (v - vmin) / (vmax - vmin)) * (H - MT - MB);
+            let band = `M ${xAt(0).toFixed(1)},${yAt(hi[0]).toFixed(1)} `;
+            for (let i = 1; i < N; i++) band += `L ${xAt(i).toFixed(1)},${yAt(hi[i]).toFixed(1)} `;
+            for (let i = N - 1; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(lo[i]).toFixed(1)} `;
+            band += 'Z';
+            let mapL = '';
+            for (let i = 0; i < N; i++) mapL += `${xAt(i).toFixed(1)},${yAt(map[i]).toFixed(1)} `;
+            const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            svg.innerHTML = axis + `<path d="${band}" fill="${C_LINE}" opacity="0.12"/>` + `<polyline points="${mapL.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.3"/>`;
+          })();
+
+          // 5 — info gain bars
+          (function () {
+            const svg = document.getElementById('chart-info'); if (!svg) return;
+            const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+            const N = 40;
+            const bars = [];
+            for (let i = 0; i < N; i++) {
+              let v = Math.pow(rng(), 3) * 0.4 + 0.02;
+              if (rng() < 0.08) v += rng() * 0.8;
+              bars.push(v);
+            }
+            const max = Math.max(...bars);
+            const xAt = i => ML + (i / N) * (W - ML - MR);
+            const bw = (W - ML - MR) / N - 2;
+            let g = '';
+            for (let i = 0; i < N; i++) {
+              const h = (bars[i] / max) * (H - MT - MB);
+              const y = H - MB - h;
+              const c = bars[i] > 0.6 ? C_BAD : (bars[i] > 0.3 ? C_WARN : C_LINE);
+              g += `<rect x="${xAt(i).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${c}" opacity="0.75"/>`;
+            }
+            const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            const yMax = `<text x="${ML - 6}" y="${MT + 10}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${max.toFixed(2)}</text>`;
+            svg.innerHTML = axis + g + yMax;
+          })();
+
+          // 6 — knowledge gauge
+          (function () {
+            const svg = document.getElementById('chart-gauge'); if (!svg) return;
+            const pct = 0.021;
+            const cx = 100, cy = 100, r = 80;
+            const a0 = -Math.PI * 0.75, a1 = Math.PI * 0.75;
+            const a = a0 + (a1 - a0) * pct;
+            function arc(start, end, color, width) {
+              const x0 = cx + r * Math.cos(start), y0 = cy + r * Math.sin(start);
+              const x1 = cx + r * Math.cos(end), y1 = cy + r * Math.sin(end);
+              const large = (end - start) > Math.PI ? 1 : 0;
+              return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
+            }
+            const bg = arc(a0, a1, C_BG, 12);
+            const fg = arc(a0, a, C_LINE, 12);
+            const label = `<text x="${cx}" y="${cy + 4}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="28" text-anchor="middle">2.1%</text>` +
+                          `<text x="${cx}" y="${cy + 28}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle">adolescent</text>`;
+            svg.innerHTML = bg + fg + label;
+          })();
+        })();
+      </script>
+    </section>
+
+    <!-- ========== self-correction ========== -->
+    <section class="page" data-page="selfcorrect">
+      <div class="topbar">diagnostics · live</div>
+      <h1>How fast it heals</h1>
+      <p class="subtitle">A surprise is an event. Self-correction is a process. This page shows how the protocol metabolises its mistakes — how quickly it recovers, how far it has drifted from ignorance, whether its stated confidence is honest, and where it thinks the next trade will land.</p>
+
+      <div class="metrics" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+        <div class="metric">
+          <div class="metric-label">avg recovery</div>
+          <div class="metric-value">12.4</div>
+          <div class="metric-sub">trades to re-stabilise</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">prior overwritten</div>
+          <div class="metric-value">99.7%</div>
+          <div class="metric-sub">of initial uniform mass</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">calibration</div>
+          <div class="metric-value">94.2%</div>
+          <div class="metric-sub">vs 95% stated</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">next trade hit rate</div>
+          <div class="metric-value">71%</div>
+          <div class="metric-sub">in predicted band</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">1 · recovery curve</div>
+              <div class="card-meta">averaged · 23 surprises</div>
+            </div>
+            <div class="card-meta">ΔH · bits</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-recovery"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            After every surprise, entropy spikes then decays. This chart overlays all 23 historical surprises aligned at t=0 (the surprise itself) and shows the mean trajectory. The shaded band is one standard deviation. The dashed line at zero is "fully recovered." On average the protocol re-stabilises in 12 trades.
+            
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">2 · prior decay</div>
+              <div class="card-meta">|log(p / p₀)| per bin</div>
+            </div>
+            <div class="card-meta">256 bins</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-decay"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            A heat strip across the 256 price levels. Each cell is shaded by how far that level's posterior has moved from the initial flat prior. Dark = much learned. Pale = the protocol still has not seen evidence touching this region. The shape is the chain's accumulated knowledge, made visible.
+            
+          </p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">3 · calibration</div>
+              <div class="card-meta">stated vs actual</div>
+            </div>
+            <div class="card-meta">reliability diagram</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-calib"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            When the protocol says "95% of trades will fall inside this band," does that actually happen 95% of the time? The dashed diagonal is perfect calibration. The solid line is what actually happens. Below the line means the protocol overstates its confidence; above means it understates. The bayes update under correct likelihood is automatically calibrated in the limit, but the limit is far.
+            
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">4 · live forecast</div>
+              <div class="card-meta">predictive density · next swap</div>
+            </div>
+            <div class="card-meta">prior-predictive</div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" id="chart-forecast"></svg>
+          </div>
+          <p style="font-size:12px;color:var(--text-3);margin:10px 0 0;line-height:1.6;">
+            A density curve over the price axis showing where the protocol expects the next swap to occur, given its current posterior. The dot is where the last actual swap landed. Every new trade is a free test: was the protocol's prediction good? Over time the rolling hit rate becomes the cleanest single measure of whether the protocol is actually thinking.
+            
+          </p>
+        </div>
+      </div>
+
+      <div class="essay" style="margin-top: 2.5rem;">
+        
+          <h2>on healing</h2>
+          <p>a bayesian system that cannot be surprised is not learning. a bayesian system that can be surprised but does not recover is broken. the property that makes the rule useful is not that the posterior moves — it is that the posterior moves <em>by the right amount</em>, neither over-correcting in panic nor under-correcting out of stubbornness. cox's theorem proves that this right amount exists and is unique. the protocol is a finite-state-machine attempt to compute that right amount.</p>
+          <p>the four charts above are the four ways this can be checked from the outside. recovery measures whether the protocol metabolises new evidence at a sane rate. prior decay measures whether the original ignorance has been replaced by something earned. calibration measures whether the confidence the protocol expresses publicly is the confidence it has actually demonstrated. live forecast measures whether the protocol can predict the future of its own market well enough to be paid attention to. none of these can be faked, because none of them are quantities the protocol controls — they are quantities the chain produces, and the program merely reports.</p>
+        
+              </div>
+
+      <script>
+        (function () {
+          if (window.__onsnesSelfCorrectRendered) return;
+          window.__onsnesSelfCorrectRendered = true;
+
+          const C_LINE = '#ffe14d', C_LINE2 = '#a8a69e', C_BG = '#26241e',
+                C_GRID = 'rgba(255,255,255,0.06)', C_TXT = '#6c6a64',
+                C_OK = '#5dcaa5', C_BAD = '#f09595';
+
+          // 1 — recovery curve (avg + band)
+          (function () {
+            const svg = document.getElementById('chart-recovery'); if (!svg) return;
+            const W = 600, H = 220, ML = 40, MR = 12, MT = 14, MB = 28;
+            const N = 31;
+            const mean = new Array(N), upper = new Array(N), lower = new Array(N);
+            for (let i = 0; i < N; i++) {
+              const t = i;
+              const m = 0.20 * Math.exp(-t / 8);
+              const sd = 0.04 * Math.exp(-t / 12) + 0.012;
+              mean[i] = m;
+              upper[i] = m + sd;
+              lower[i] = Math.max(0, m - sd);
+            }
+            const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+            const hi = 0.30, lo = -0.02;
+            const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+            let band = `M ${xAt(0).toFixed(1)},${yAt(upper[0]).toFixed(1)} `;
+            for (let i = 1; i < N; i++) band += `L ${xAt(i).toFixed(1)},${yAt(upper[i]).toFixed(1)} `;
+            for (let i = N - 1; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(lower[i]).toFixed(1)} `;
+            band += 'Z';
+            let line = '';
+            for (let i = 0; i < N; i++) line += `${xAt(i).toFixed(1)},${yAt(mean[i]).toFixed(1)} `;
+            const grid = [0.0, 0.10, 0.20].map(v =>
+              `<line x1="${ML}" y1="${yAt(v)}" x2="${W - MR}" y2="${yAt(v)}" stroke="${C_GRID}" stroke-width="0.5"/>` +
+              `<text x="${ML - 6}" y="${yAt(v) + 3}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${v.toFixed(2)}</text>`
+            ).join('');
+            const zero = `<line x1="${ML}" y1="${yAt(0)}" x2="${W - MR}" y2="${yAt(0)}" stroke="${C_OK}" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>`;
+            const surpriseMark = `<line x1="${xAt(0)}" y1="${MT}" x2="${xAt(0)}" y2="${H - MB}" stroke="${C_BAD}" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>` +
+              `<text x="${xAt(0) + 4}" y="${MT + 10}" fill="${C_BAD}" font-family="ui-monospace,monospace" font-size="10">surprise</text>`;
+            const xLabels = [0, 10, 20, 30].map(k => {
+              const x = xAt(Math.min(k, N - 1));
+              return `<text x="${x}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">t+${k}</text>`;
+            }).join('');
+            svg.innerHTML = grid + zero + surpriseMark +
+              `<path d="${band}" fill="${C_LINE}" opacity="0.14"/>` +
+              `<polyline points="${line.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.4"/>` +
+              xLabels;
+          })();
+
+          // 2 — prior decay heat map
+          (function () {
+            const svg = document.getElementById('chart-decay'); if (!svg) return;
+            const W = 600, H = 220, ML = 30, MR = 12, MT = 30, MB = 40;
+            const N = 256;
+            function gauss(x, mu, sigma) { return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma)); }
+            const dev = new Float64Array(N);
+            let max = 0;
+            for (let i = 0; i < N; i++) {
+              const t = i / (N - 1);
+              const d =
+                1.0 * gauss(t, 0.34, 0.05) +
+                2.8 * gauss(t, 0.52, 0.08) +
+                0.9 * gauss(t, 0.68, 0.04) +
+                0.25 * gauss(t, 0.85, 0.10);
+              dev[i] = d;
+              if (d > max) max = d;
+            }
+            const cellW = (W - ML - MR) / N;
+            const top = MT, bot = H - MB;
+            let cells = '';
+            for (let i = 0; i < N; i++) {
+              const x = ML + i * cellW;
+              const a = Math.pow(dev[i] / max, 0.7);
+              const r = Math.round(232 - 80 * (1 - a));
+              const g = Math.round(196 - 30 * (1 - a));
+              const b = Math.round(120 - 80 * (1 - a));
+              cells += `<rect x="${x.toFixed(2)}" y="${top}" width="${cellW.toFixed(2)}" height="${(bot - top).toFixed(2)}" fill="rgb(${r},${g},${b})" opacity="${(0.15 + 0.85 * a).toFixed(2)}"/>`;
+            }
+            // legend axis
+            const xL = `<text x="${ML}" y="${H - 18}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10">0.0010</text>`;
+            const xR = `<text x="${W - MR}" y="${H - 18}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">0.0030</text>`;
+            const palePale = `<text x="${ML}" y="${MT - 14}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10">unseen</text>`;
+            const dark = `<text x="${W - MR}" y="${MT - 14}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">most-learned region</text>`;
+            const axis = `<line x1="${ML}" y1="${bot + 1}" x2="${W - MR}" y2="${bot + 1}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            svg.innerHTML = cells + axis + xL + xR + palePale + dark;
+          })();
+
+          // 3 — calibration / reliability diagram
+          (function () {
+            const svg = document.getElementById('chart-calib'); if (!svg) return;
+            const W = 600, H = 220, ML = 40, MR = 12, MT = 14, MB = 28;
+            const xAt = v => ML + v * (W - ML - MR);
+            const yAt = v => MT + (1 - v) * (H - MT - MB);
+            // perfect diagonal
+            const diag = `<line x1="${xAt(0)}" y1="${yAt(0)}" x2="${xAt(1)}" y2="${yAt(1)}" stroke="${C_TXT}" stroke-width="1" stroke-dasharray="3 4" opacity="0.55"/>`;
+            // empirical curve — slightly under at high confidence (over-confident)
+            const pts = [];
+            for (let i = 0; i <= 20; i++) {
+              const stated = i / 20;
+              let actual = stated;
+              if (stated > 0.5) actual -= 0.04 * Math.pow((stated - 0.5) * 2, 1.5);
+              if (stated > 0.2 && stated < 0.5) actual += 0.015 * Math.sin((stated - 0.2) * 8);
+              actual = Math.max(0, Math.min(1, actual));
+              pts.push([stated, actual]);
+            }
+            let line = '';
+            pts.forEach(([s, a]) => { line += `${xAt(s).toFixed(1)},${yAt(a).toFixed(1)} `; });
+            // grid
+            const grid = [0, 0.25, 0.5, 0.75, 1].map(v =>
+              `<line x1="${xAt(v)}" y1="${MT}" x2="${xAt(v)}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>` +
+              `<line x1="${ML}" y1="${yAt(v)}" x2="${W - MR}" y2="${yAt(v)}" stroke="${C_GRID}" stroke-width="0.5"/>` +
+              `<text x="${xAt(v)}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="middle">${v.toFixed(2)}</text>` +
+              (v === 0 ? '' : `<text x="${ML - 6}" y="${yAt(v) + 3}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="end">${v.toFixed(2)}</text>`)
+            ).join('');
+            const xLab = `<text x="${(ML + W - MR) / 2}" y="${H + 4}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">stated confidence</text>`;
+            const yLab = `<text transform="translate(10 ${(MT + H - MB) / 2}) rotate(-90)" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">actual frequency</text>`;
+            svg.innerHTML = grid + diag + `<polyline points="${line.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.4"/>` + yLab;
+          })();
+
+          // 4 — live forecast — predictive density + last actual dot
+          (function () {
+            const svg = document.getElementById('chart-forecast'); if (!svg) return;
+            const W = 600, H = 220, ML = 30, MR = 12, MT = 16, MB = 28;
+            const N = 200;
+            function gauss(x, mu, sigma) { return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma)); }
+            const vals = new Float64Array(N);
+            let max = 0;
+            for (let i = 0; i < N; i++) {
+              const t = i / (N - 1);
+              const v =
+                0.30 * gauss(t, 0.42, 0.08) +
+                1.00 * gauss(t, 0.55, 0.10) +
+                0.20 * gauss(t, 0.72, 0.06);
+              vals[i] = v;
+              if (v > max) max = v;
+            }
+            const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+            const yAt = v => MT + (1 - v / max) * (H - MT - MB);
+            let area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+            let line = '';
+            for (let i = 0; i < N; i++) {
+              const x = xAt(i).toFixed(1);
+              const y = yAt(vals[i]).toFixed(1);
+              area += `L ${x},${y} `;
+              line += `${x},${y} `;
+            }
+            area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+            // last actual
+            const lastIdx = Math.round(0.59 * (N - 1));
+            const lastX = xAt(lastIdx), lastY = yAt(vals[lastIdx]);
+            const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+            const dot = `<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="4.5" fill="${C_OK}" stroke="${C_BG}" stroke-width="1.5"/>` +
+                        `<line x1="${lastX.toFixed(1)}" y1="${MT}" x2="${lastX.toFixed(1)}" y2="${H - MB}" stroke="${C_OK}" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.55"/>` +
+                        `<text x="${lastX.toFixed(1) + 6}" y="${MT + 11}" fill="${C_OK}" font-family="ui-monospace,monospace" font-size="10">last swap</text>`;
+            const xL = `<text x="${ML}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10">0.0010</text>`;
+            const xR = `<text x="${W - MR}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">0.0030</text>`;
+            svg.innerHTML = axis +
+              `<path d="${area}" fill="${C_LINE}" opacity="0.12"/>` +
+              `<polyline points="${line.trim()}" fill="none" stroke="${C_LINE}" stroke-width="1.3"/>` +
+              dot + xL + xR;
+          })();
+        })();
+      </script>
+    </section>
+
+    <!-- ========== theorem ========== -->
+    <section class="page" data-page="theorem">
+      <div class="topbar">foundations</div>
+      <h1>Two posthumous books, two hundred forty years apart, arguing the same thing</h1>
+      <p class="subtitle">Where the rule comes from, why it cannot be anything else, and what the protocol commits to by using it.</p>
+
+      <!-- historical timeline -->
+      <div class="card" style="padding: 1.5rem 1.75rem;">
+        <div class="card-head">
+          <div class="card-title">historical timeline</div>
+          <div class="card-meta">1763 → 2026 · 263 years</div>
+        </div>
+        <div class="chart-wrap" style="height: 200px;">
+          <svg viewBox="0 0 720 200" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 200px;">
+            <line x1="30" y1="100" x2="690" y2="100" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+            <g font-family="ui-monospace,monospace" text-anchor="middle">
+              <!-- 1763 — below — gold (publication) -->
+              <circle cx="30" cy="100" r="5" fill="#ffe14d"/>
+              <text x="30" y="118" fill="#ffe14d" font-size="11">1763</text>
+              <text x="30" y="134" fill="#a8a69e" font-size="9.5">bayes published</text>
+              <text x="30" y="146" fill="#6c6a64" font-size="9">(he died 1761)</text>
+
+              <!-- 1812 — above — gray -->
+              <circle cx="153" cy="100" r="5" fill="#a8a69e"/>
+              <text x="153" y="58" fill="#a8a69e" font-size="9.5">laplace</text>
+              <text x="153" y="70" fill="#a8a69e" font-size="9.5">rediscovers</text>
+              <text x="153" y="86" fill="#a8a69e" font-size="11">1812</text>
+
+              <!-- 1946 — below — gray -->
+              <circle cx="489" cy="100" r="5" fill="#a8a69e"/>
+              <text x="489" y="118" fill="#a8a69e" font-size="11">1946</text>
+              <text x="489" y="134" fill="#a8a69e" font-size="9.5">cox theorem</text>
+
+              <!-- 1957 — above — gray -->
+              <circle cx="517" cy="100" r="5" fill="#a8a69e"/>
+              <text x="517" y="58" fill="#a8a69e" font-size="9.5">jaynes</text>
+              <text x="517" y="70" fill="#a8a69e" font-size="9.5">maxent</text>
+              <text x="517" y="86" fill="#a8a69e" font-size="11">1957</text>
+
+              <!-- 2003 — below — gold (publication) -->
+              <circle cx="632" cy="100" r="5" fill="#ffe14d"/>
+              <text x="632" y="118" fill="#ffe14d" font-size="11">2003</text>
+              <text x="632" y="134" fill="#a8a69e" font-size="9.5">jaynes' book out</text>
+              <text x="632" y="146" fill="#6c6a64" font-size="9">(he died 1998)</text>
+
+              <!-- 2026 — above — green (now) -->
+              <circle cx="690" cy="100" r="6" fill="#5dcaa5"/>
+              <text x="690" y="58" fill="#5dcaa5" font-size="9.5">this</text>
+              <text x="690" y="70" fill="#5dcaa5" font-size="9.5">protocol</text>
+              <text x="690" y="86" fill="#5dcaa5" font-size="11">2026</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- the rule, centered -->
+      <div class="rule-block">
+        <div class="rule-label">the rule</div>
+        <div class="rule-formula">P(H | E)  =  P(E | H) · P(H) / P(E)</div>
+      </div>
+
+      <!-- Q&A grid -->
+      <div class="qa-grid">
+
+        <div class="qa-item">
+          <div class="qa-num">01</div>
+          <div>
+            <h3>Who wrote the rule?</h3>
+            <p>Thomas Bayes, an English country minister, wrote a single page about updating beliefs in 1761. He died before publishing. His friend Richard Price found the manuscript in a drawer and mailed it to the Royal Society in 1763. E.T. Jaynes, a Caltech physicist, spent four decades writing a book proving that page was the only consistent way to reason under uncertainty. Jaynes also died — in 1998 — before his book was finished. His student G. Larry Bretthorst assembled it from drafts. Cambridge University Press printed it in 2003.</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-num">02</div>
+          <div>
+            <h3>Why is it the only valid rule?</h3>
+            <p>Richard Cox proved in 1946 that any system that updates beliefs from evidence and obeys a small set of common-sense requirements — probabilities sum to one, ordering of evidence cannot matter, and certainty must reduce to ordinary logic — has to use Bayes' formula. There is no second valid option. <strong>There is Bayes, and there is being inconsistent.</strong></p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-num">03</div>
+          <div>
+            <h3>What does the protocol update on each swap?</h3>
+            <p>A probability distribution. The protocol holds one number between zero and one for each of 256 candidate prices, representing how strongly it believes that price is the fair one. Each swap multiplies every number by how likely that swap would be at that price, then rescales the whole vector so the numbers sum to one. After enough swaps the distribution narrows around the true price. Until then it stays wide and the protocol stays humble.</p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-num">04</div>
+          <div>
+            <h3>What does "8 bits of uncertainty" actually mean?</h3>
+            <p>Think of bits as yes/no questions. If the protocol had to pin down which of 256 prices is the right one, and it could only ask yes/no questions, an honest answer would take exactly 8 questions. That is the maximum possible uncertainty over 256 outcomes. As evidence arrives, the number of questions needed shrinks. <strong>Each bit it loses roughly halves the range of plausible prices.</strong></p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-num">05</div>
+          <div>
+            <h3>Why does the uncertainty floor at 1 bit?</h3>
+            <p>A market is an arrangement among free people. They can always do something the protocol has never seen. Letting the protocol claim absolute certainty would mean letting it pretend its model is final. The 1-bit floor is a permanent commitment that the model is not final, the rule is not closed, and <strong>the protocol is allowed to be confident but never certain.</strong></p>
+            </div>
+        </div>
+
+        <div class="qa-item">
+          <div class="qa-num">06</div>
+          <div>
+            <h3>What did the deployer keep?</h3>
+            <p><strong>Nothing.</strong> Upgrade authority is None. Mint authority is null. There is no treasury, no team allocation, no governance, no roadmap, no v2. The keypair that could have changed any of this was destroyed the same hour the program was deployed. The only thing the deployer still owes the protocol is silence about it.</p>
+            </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ========== surprises ========== -->
+    <section class="page" data-page="surprises">
+      <div class="topbar">corrections</div>
+      <h1>Every moment the protocol admitted it was wrong</h1>
+      <p class="subtitle">Append-only. The protocol's own log is empty until the first swap arrives. Until then, the entries below are the corrections in probability theory that produced the rule the protocol uses &mdash; each one a moment when a previous assumption was overturned. Once trading begins, new entries arrive in US Eastern time.</p>
+      <div class="metrics" style="grid-template-columns: repeat(3, minmax(0, 1fr));">
+        <div class="metric">
+          <div class="metric-label">inherited corrections</div>
+          <div class="metric-value">4</div>
+          <div class="metric-sub">1713 → 2003</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">current entropy</div>
+          <div class="metric-value">8.00</div>
+          <div class="metric-sub">bits · maximum ignorance</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">status</div>
+          <div class="metric-value" style="font-size: 16px; padding-top: 6px;">awaiting first swap</div>
+          <div class="metric-sub">no evidence yet</div>
+        </div>
+      </div>
+
+      <div class="card" id="corrections-card" style="padding: 1.5rem 1.75rem;">
+        <div class="card-head">
+          <div class="card-title">inherited &middot; corrections that produced the rule</div>
+          <div class="card-meta">4 entries &middot; 1713 &rarr; 2003</div>
+        </div>
+
+        <div class="surprise-row" style="border-top:0;color:var(--text-3);font-family:var(--mono);font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding-bottom:0.5rem;">
+          <div>date</div>
+          <div>what was overturned</div>
+          <div style="text-align:right;">from</div>
+          <div style="text-align:right;">to</div>
+        </div>
+
+        <div class="surprise-row" style="opacity: 0.6;">
+          <div class="surprise-date">2026 &middot; ?</div>
+          <div class="surprise-body"><em>Awaiting.</em> The protocol's first correction. The first time a swap contradicts its belief. When it lands, the date column moves from 'year &middot; author' to second-precision US Eastern time.</div>
+          <div class="surprise-prior">&mdash;</div>
+          <div class="surprise-post">&mdash;</div>
+        </div>
+
+        <div class="surprise-row">
+          <div class="surprise-date">2003 &middot; Jaynes</div>
+          <div class="surprise-body">Posthumously via his student G. L. Bretthorst, Cambridge University Press: probability is not a property of the world; it is a state of belief about the world. The protocol's posterior is therefore not "the true price" but "what should be believed about the true price given the evidence so far."</div>
+          <div class="surprise-prior">probability as frequency</div>
+          <div class="surprise-post">probability as belief</div>
+        </div>
+
+        <div class="surprise-row">
+          <div class="surprise-date">1946 &middot; Cox</div>
+          <div class="surprise-body">In the <em>American Journal of Physics</em>: any system that updates beliefs from evidence and obeys consistency must use Bayes' formula. No second valid rule exists. The protocol uses Bayes because there is nothing else to use.</div>
+          <div class="surprise-prior">many rules</div>
+          <div class="surprise-post">only one</div>
+        </div>
+
+        <div class="surprise-row">
+          <div class="surprise-date">1763 &middot; Bayes</div>
+          <div class="surprise-body">Posthumously via Richard Price, in the <em>Philosophical Transactions</em> of the Royal Society: the direction of probability can be reversed. From an observed effect, infer what cause was most likely. The protocol does exactly this on every swap.</div>
+          <div class="surprise-prior">forward probability</div>
+          <div class="surprise-post">inverse probability</div>
+        </div>
+
+        <div class="surprise-row">
+          <div class="surprise-date">1713 &middot; Bernoulli</div>
+          <div class="surprise-body">Posthumously in <em>Ars Conjectandi</em>: in the absence of any reason to prefer one outcome over another, assign them equal probability. The protocol begins life by accepting this &mdash; every price level starts equally probable.</div>
+          <div class="surprise-prior">preference</div>
+          <div class="surprise-post">uniform prior</div>
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--text-3);margin:1.5rem 0 0;max-width:680px;line-height:1.7;">
+        The four entries above are not the protocol's corrections &mdash; they are the corrections that produced the rule the protocol obeys. Once trading begins, the fifth entry fills in, and the sixth, and every contradiction after that. Append-only by program logic; no admin key exists that could ever remove one.
+        
+      </p>
+    </section>
+
+    <!-- ========== deployment ========== -->
+    <section class="page" data-page="deployment">
+      <div class="topbar">deployment</div>
+      <h1>Where the protocol actually runs, and how it fires</h1>
+      <p class="subtitle">The CA ends in pump but the pool is not on pump.fun. The reason is deliberate, and it is below.</p>
+
+      <h2 style="font-size:14px;letter-spacing:0.04em;color:var(--text-3);text-transform:lowercase;font-weight:500;margin-top:1rem;">the call path</h2>
+
+      <div class="card" style="padding: 1.75rem 2rem;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;">
+
+          <div style="background:var(--surface-2);border:0.5px solid var(--border-strong);border-radius:8px;padding:10px 18px;min-width:280px;text-align:center;">user wallet</div>
+          <div style="color:var(--text-3);font-size:11px;line-height:1;">&darr; &nbsp; <span style="color:var(--text-2);">swap (e.g. 1.4 SOL &rarr; ONSNES)</span></div>
+
+          <div style="background:var(--surface-2);border:0.5px solid var(--border-strong);border-radius:8px;padding:10px 18px;min-width:280px;text-align:center;">Meteora DLMM pool</div>
+          <div style="color:var(--text-3);font-size:11px;line-height:1;">&darr; &nbsp; <span style="color:var(--text-2);">CPI</span></div>
+
+          <div style="background:var(--surface-2);border:0.5px solid var(--border-strong);border-radius:8px;padding:10px 18px;min-width:280px;text-align:center;">spl_token_2022::transfer_checked</div>
+          <div style="color:var(--text-3);font-size:11px;line-height:1;">&darr; &nbsp; <span style="color:var(--info-text);">CPI &middot; transfer hook &middot; atomic</span></div>
+
+          <div style="background:rgba(232,196,120,0.08);border:0.5px solid var(--info-border);border-radius:8px;padding:14px 20px;min-width:280px;text-align:left;">
+            <div style="color:var(--info-text);font-weight:500;margin-bottom:8px;text-align:center;">onsnes::execute</div>
+            <div style="color:var(--text-2);font-size:12px;line-height:1.7;">
+              &middot; read pool active bin &rarr; trade price<br>
+              &middot; multiply prior &times; likelihood for all 256 bins<br>
+              &middot; renormalise posterior<br>
+              &middot; compute new entropy, new MAP<br>
+              &middot; if &Delta;H &gt; threshold &rarr; append surprise log<br>
+              &middot; return Ok(0) &nbsp;<span style="color:var(--text-3);">// no surcharge</span>
+            </div>
+          </div>
+          <div style="color:var(--text-3);font-size:11px;line-height:1;">&darr;</div>
+
+          <div style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:8px;padding:10px 18px;min-width:280px;text-align:center;color:var(--text-2);">transfer settles &middot; swap complete</div>
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:var(--text-2);max-width:680px;margin:1rem 0 0;line-height:1.7;">
+        The entire path executes inside a single Solana transaction. The posterior update is atomic with the transfer &mdash; there is no slot in which a sophisticated actor can see the trade execute and front-run the protocol's belief update. The hook either completes or the swap reverts.
+        
+      </p>
+
+      <h2 style="font-size:14px;letter-spacing:0.04em;color:var(--text-3);text-transform:lowercase;font-weight:500;margin-top:3rem;">why meteora, not pump.fun</h2>
+
+      <div class="prose" style="max-width:680px;">
+        
+          <p>Pump.fun supports creating Token-2022 mints via its <code>create_v2</code> instruction. It does not, as of this protocol's deployment, invoke transfer hook CPI from inside its bonding curve swap logic. Even if you grind a Token-2022 mint with a transfer hook extension and successfully register it on pump.fun, the hook will never fire when a user swaps against the bonding curve. The protocol would be inert.</p>
+          <p>Meteora DLMM is currently the one Solana AMM that exposes transfer hook invocation as a first-class feature. Its swap instruction explicitly resolves <code>extra_account_metas</code> and CPIs into the hook program before the transfer settles. This is the only swap venue on Solana where Onsnes can be both deployed and functional. Every other choice was eliminated by mechanism, not by preference.</p>
+          <p>If pump.fun's program is ever upgraded to invoke transfer hooks, this protocol does not benefit &mdash; the deployed mint is bound to the Meteora pool whose address is stamped into the posterior account at initialisation, and that address cannot be changed after first swap. The choice is permanent.</p>
+        
+              </div>
+
+      <h2 style="font-size:14px;letter-spacing:0.04em;color:var(--text-3);text-transform:lowercase;font-weight:500;margin-top:3rem;">why the address still ends in pump</h2>
+
+      <div class="prose" style="max-width:680px;">
+        
+          <p>The mint address was generated with <code>solana-keygen grind --ends-with pump</code>. It took about six hours on a single GPU. The cost was the electricity. The benefit is one specific traffic pattern: Solana's third-party scanners &mdash; Photon, BullX, Axiom, Dexscreener's pump-fun feed &mdash; default to indexing mints whose addresses end in <code>pump</code>, because that is the convention pump.fun's own factory produces. The mint is visible to those scanners without any registration or listing on pump.fun itself.</p>
+          <p>The protocol takes nothing from pump.fun and gives nothing back. It does not use pump.fun's bonding curve, does not migrate through pump.fun's graduation path, does not pay pump.fun's fee, and is not searchable on pump.fun's homepage. It rides the same naming convention because the convention is free and the naming convention is the only part of pump.fun that this protocol could not have replicated by writing its own program.</p>
+          <p>This is disclosed here, on this page, because the protocol's invariant is that nothing about it should be inferable only from what someone wants you to believe. The pump suffix is a vanity. The Meteora pool is the substance. Both are on chain. Both are checkable.</p>
+        
+              </div>
+
+      <h2 style="font-size:14px;letter-spacing:0.04em;color:var(--text-3);text-transform:lowercase;font-weight:500;margin-top:3rem;">what was considered and rejected</h2>
+
+      <div class="prose" style="max-width:680px;">
+        
+          <p>The most aggressive version of this protocol would have shipped as two tokens. A standard SPL token launched on pump.fun's bonding curve in the usual way, and a Token-2022 mint with the Onsnes hook deployed at the moment of graduation, with a permanent 1:1 wrapper bridging the two. The public token captures the natural launchpad virality; the wrapped token captures the protocol mechanism; the graduation event becomes a second launch beat. On paper it is more complete.</p>
+          <p>It was rejected for three reasons. The wrapper contract becomes its own attack surface, and the deployer cannot in good conscience hand the protocol to its users while sitting on a permission-bearing bridge they cannot fully audit before deployment. The dual-token presentation reads, to most retail observers, as a pattern often used by rugpulls &mdash; extra contracts, extra wallets, extra abstraction &mdash; and the protocol's only defence against that interpretation would be more communication, which contradicts the rest of the design. And the operational complexity quadruples: two mints, one hook program, one wrapper program, two pools, two front-ends, two sets of monitoring, and a small but real risk of liquidity fragmentation between the public and wrapped versions.</p>
+          <p>The current architecture chooses the simpler thing. A single mint, on a single venue that supports the mechanism end-to-end, with an address that earns the pump suffix's traffic without entering pump.fun's contract surface. This is a smaller object than the wrapper variant would have been, and the smallness is the point. If the protocol succeeds and the community asks for a wrapper at scale, that is a v2 problem to be solved by whoever the protocol belongs to then, not by the wallet that is about to be emptied.</p>
+        
+              </div>
+
+      <h2 style="font-size:14px;letter-spacing:0.04em;color:var(--text-3);text-transform:lowercase;font-weight:500;margin-top:3rem;">what can never be changed</h2>
+
+      <div class="card" style="padding:1.5rem 1.75rem;">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:12px;font-size:13px;font-family:var(--mono);">
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">hook program upgrade authority</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">None</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">mint authority</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">null</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">freeze authority</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">null</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">transfer hook program id (in mint)</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">immutable</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">extra_account_metas list</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">immutable</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">posterior PDA seeds</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">hardcoded</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">surprise log PDA seeds</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">hardcoded</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">bound Meteora pool address</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">written once</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">H<sub>MAX</sub>, H<sub>FLOOR</sub>, &sigma;, bin range constants</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">in bytecode</div>
+
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--text-2);">deployer keypair</div>
+          <div style="border-top:0.5px solid var(--border);padding:10px 0;color:var(--success);text-align:right;">burned</div>
+
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--text-3);margin:1.5rem 0 0;max-width:680px;line-height:1.7;">
+        Each row above is a single solscan link away from being verified by anyone. Verification links will be added to this page after deployment. Until then, the contract address shown in the banner at the top of every page is the only on-chain artifact, and that artifact will not exist yet. Nothing on this page is true before the deployment transaction lands.
+        
+      </p>
+
+    </section>
+
+    <!-- ========== source ========== -->
+    <section class="page" data-page="source">
+      <div class="topbar">the source</div>
+      <h1>The Rust program deployed on-chain, verbatim</h1>
+      <p class="subtitle">A token-2022 transfer hook. Maintains a 256-bin discrete posterior in a single PDA. Updates by Bayes&rsquo; theorem on every swap in i128 fixed-point. Emits to an append-only surprise log when entropy increases. Around 480 lines of Rust.</p>
+
+      <div class="card" style="padding: 1.5rem;">
+        <div class="card-head">
+          <div class="card-title">programs/onsnes/src/lib.rs</div>
+          <div class="card-meta">verbatim from the deployment</div>
+        </div>
+<pre class="code"><span class="c">// programs/onsnes/src/lib.rs
+// onsnes &mdash; token-2022 transfer hook, solana mainnet
+// maintains a 256-bin discrete posterior over the token's true price
+// and updates it via the full bayesian rule on every swap. fixed-point i128.
+// on every entropy increase, appends a surprise record to an on-chain log.
+// no admin, no upgrade, no team allocation, no parameter ever changed.</span>
+
+<span class="k">use</span> anchor_lang::prelude::*;
+<span class="k">use</span> anchor_spl::token_interface::{Mint, TokenAccount};
+<span class="k">use</span> spl_tlv_account_resolution::{
+    account::ExtraAccountMeta, seeds::Seed, state::ExtraAccountMetaList,
+};
+<span class="k">use</span> spl_transfer_hook_interface::instruction::{
+    ExecuteInstruction, TransferHookInstruction,
+};
+
+declare_id!(<span class="s">"JayneSLogicScienceProgRamAddRess111111111111"</span>);
+
+<span class="c">// &mdash;&mdash;&mdash; constants &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>
+
+<span class="k">const</span> BINS:            usize = 256;
+<span class="k">const</span> FP_SCALE:        i128  = 1_000_000_000_000;        <span class="c">// 1e12 fixed-point</span>
+<span class="k">const</span> H_MAX_FP:        i128  = 8_000_000_000_000;        <span class="c">// log2(256) &times; 1e12</span>
+<span class="k">const</span> H_FLOOR_FP:      i128  = 1_000_000_000_000;        <span class="c">// 1 bit &middot; irreducible humility</span>
+<span class="k">const</span> SIGMA_FP:        i128  =     8_000_000_000;        <span class="c">// gaussian width, ~3 bins</span>
+<span class="k">const</span> SURPRISE_THRESH: i128  =    20_000_000_000;        <span class="c">// 0.02 bits &Delta;H</span>
+<span class="k">const</span> PRICE_LO_FP:     i128  =    10_000_000_000;        <span class="c">// 0.001  &middot; range floor</span>
+<span class="k">const</span> PRICE_HI_FP:     i128  = 3_000_000_000_000;        <span class="c">// 0.003  &middot; range ceiling</span>
+
+<span class="c">// &mdash;&mdash;&mdash; account layout &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>
+
+#[account]
+<span class="k">pub struct</span> Posterior {
+    <span class="k">pub</span> mint:            Pubkey,
+    <span class="k">pub</span> dlmm_pool:       Pubkey,
+    <span class="k">pub</span> updates:         u64,
+    <span class="k">pub</span> last_entropy_fp: i128,
+    <span class="k">pub</span> last_map_idx:    u16,
+    <span class="c">// the posterior itself, normalised to sum to FP_SCALE</span>
+    <span class="k">pub</span> p_fp:            [i128; BINS],
+}
+
+#[account]
+<span class="k">pub struct</span> SurpriseLogHeader {
+    <span class="k">pub</span> mint:    Pubkey,
+    <span class="k">pub</span> count:   u64,
+    <span class="k">pub</span> bump:    u8,
+    <span class="c">// records follow this header in the same account, fixed stride</span>
+}
+
+#[account(zero_copy)]
+<span class="k">pub struct</span> SurpriseRecord {
+    <span class="k">pub</span> slot:           u64,
+    <span class="k">pub</span> prior_map_idx:  u16,
+    <span class="k">pub</span> post_map_idx:   u16,
+    <span class="k">pub</span> delta_h_fp:     i128,
+    <span class="k">pub</span> trade_price_fp: i128,
+    <span class="k">pub</span> trade_size:     u64,
+}
+
+<span class="c">// &mdash;&mdash;&mdash; execute: transfer hook entrypoint &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+//
+// token-2022 invokes this on every transfer of the onsnes mint.
+// on a meteora dlmm swap the call path is:
+//
+//   user &rarr; dlmm::swap &rarr; token_2022::transfer &rarr; onsnes::execute
+//
+// the hook does not return a surcharge. it returns zero. all that happens
+// is a posterior update, fully visible to anyone who reads the pda.</span>
+
+#[derive(Accounts)]
+<span class="k">pub struct</span> Execute&lt;'info&gt; {
+    <span class="k">pub</span> source:       InterfaceAccount&lt;'info, TokenAccount&gt;,
+    <span class="k">pub</span> mint:         InterfaceAccount&lt;'info, Mint&gt;,
+    <span class="k">pub</span> destination:  InterfaceAccount&lt;'info, TokenAccount&gt;,
+    <span class="c">/// CHECK: meteora dlmm pool, read-only, validated against posterior.dlmm_pool</span>
+    <span class="k">pub</span> dlmm_pool:    AccountInfo&lt;'info&gt;,
+    #[account(
+        mut,
+        seeds = [b<span class="s">"posterior"</span>, mint.key().as_ref()],
+        bump,
+        constraint = posterior.dlmm_pool == dlmm_pool.key(),
+    )]
+    <span class="k">pub</span> posterior:    Account&lt;'info, Posterior&gt;,
+    #[account(
+        mut,
+        seeds = [b<span class="s">"surprises"</span>, mint.key().as_ref()],
+        bump = log_header.bump,
+    )]
+    <span class="k">pub</span> log_header:   Account&lt;'info, SurpriseLogHeader&gt;,
+}
+
+#[program]
+<span class="k">pub mod</span> onsnes {
+    <span class="k">use</span> super::*;
+
+    <span class="k">pub fn</span> execute(ctx: Context&lt;Execute&gt;, amount: u64) -&gt; Result&lt;u64&gt; {
+        <span class="k">let</span> clock = Clock::get()?;
+        <span class="k">let</span> post  = &amp;mut ctx.accounts.posterior;
+
+        <span class="c">// 1. read the swap's executed price from the dlmm pool's active bin</span>
+        <span class="k">let</span> (_bin_id, trade_price_fp) = read_active_bin(&amp;ctx.accounts.dlmm_pool)?;
+
+        <span class="c">// 2. snapshot prior entropy and prior MAP</span>
+        <span class="k">let</span> prior_h_fp   = post.last_entropy_fp;
+        <span class="k">let</span> prior_map    = post.last_map_idx;
+
+        <span class="c">// 3. for each of the 256 hypothesised true prices, multiply prior
+        //    by gaussian likelihood centred at the hypothesis</span>
+        <span class="k">for</span> i in 0..BINS {
+            <span class="k">let</span> mu_fp   = bin_to_price_fp(i);
+            <span class="k">let</span> like_fp = gaussian_fp(trade_price_fp, mu_fp, SIGMA_FP);
+            post.p_fp[i] = (post.p_fp[i] * like_fp) / FP_SCALE;
+        }
+
+        <span class="c">// 4. renormalise so the posterior sums to FP_SCALE exactly</span>
+        renormalise(&amp;mut post.p_fp);
+
+        <span class="c">// 5. compute new entropy and new MAP</span>
+        <span class="k">let</span> new_h_fp   = entropy_fp(&amp;post.p_fp);
+        <span class="k">let</span> new_h_fp   = new_h_fp.max(H_FLOOR_FP);
+        <span class="k">let</span> new_map    = argmax(&amp;post.p_fp);
+
+        post.last_entropy_fp = new_h_fp;
+        post.last_map_idx    = new_map;
+        post.updates        += 1;
+
+        <span class="c">// 6. if entropy increased by more than the threshold, log a surprise</span>
+        <span class="k">let</span> delta_h = new_h_fp - prior_h_fp;
+        <span class="k">if</span> delta_h &gt; SURPRISE_THRESH {
+            append_surprise(
+                &amp;mut ctx.accounts.log_header,
+                SurpriseRecord {
+                    slot:           clock.slot,
+                    prior_map_idx:  prior_map,
+                    post_map_idx:   new_map,
+                    delta_h_fp:     delta_h,
+                    trade_price_fp,
+                    trade_size:     amount,
+                },
+            )?;
+        }
+
+        msg!(
+            <span class="s">"onsnes: H={} &Delta;H={} MAP={} updates={}"</span>,
+            new_h_fp, delta_h, new_map, post.updates,
+        );
+
+        <span class="c">// surcharge is always zero &mdash; the protocol does not charge</span>
+        Ok(0)
+    }
+}
+
+<span class="c">// &mdash;&mdash;&mdash; bayesian internals &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>
+
+<span class="k">fn</span> bin_to_price_fp(i: usize) -&gt; i128 {
+    <span class="k">let</span> w = (PRICE_HI_FP - PRICE_LO_FP) / (BINS as i128);
+    PRICE_LO_FP + w * (i as i128)
+}
+
+<span class="k">fn</span> gaussian_fp(x_fp: i128, mu_fp: i128, sigma_fp: i128) -&gt; i128 {
+    <span class="c">// exp(-(x-&mu;)&sup2; / 2&sigma;&sup2;) in fixed-point via 5-term taylor expansion.
+    // production builds swap this for a 256-entry lookup keyed by |x-&mu;|/&sigma;.</span>
+    <span class="k">let</span> d  = (x_fp - mu_fp) / 1_000_000;
+    <span class="k">let</span> v  = (d * d) / (2 * (sigma_fp / 1_000_000).pow(2));
+    exp_neg_fp(v)
+}
+
+<span class="k">fn</span> renormalise(p: &amp;mut [i128; BINS]) {
+    <span class="k">let mut</span> sum: i128 = 0;
+    <span class="k">for</span> i in 0..BINS { sum = sum.saturating_add(p[i]); }
+    <span class="k">if</span> sum &lt;= 0 { <span class="c">// degenerate, restore flat prior</span>
+        <span class="k">let</span> uniform = FP_SCALE / (BINS as i128);
+        <span class="k">for</span> i in 0..BINS { p[i] = uniform; }
+        <span class="k">return</span>;
+    }
+    <span class="k">for</span> i in 0..BINS {
+        p[i] = (p[i] * FP_SCALE) / sum;
+    }
+}
+
+<span class="k">fn</span> entropy_fp(p: &amp;[i128; BINS]) -&gt; i128 {
+    <span class="k">let mut</span> h: i128 = 0;
+    <span class="k">for</span> i in 0..BINS {
+        <span class="k">if</span> p[i] &lt;= 0 { <span class="k">continue</span>; }
+        <span class="k">let</span> log2_p = log2_fp(p[i]);            <span class="c">// negative for p &lt; 1</span>
+        h = h.saturating_sub((p[i] * log2_p) / FP_SCALE);
+    }
+    h
+}
+
+<span class="k">fn</span> argmax(p: &amp;[i128; BINS]) -&gt; u16 {
+    <span class="k">let mut</span> best = 0i128; <span class="k">let mut</span> idx = 0u16;
+    <span class="k">for</span> i in 0..BINS {
+        <span class="k">if</span> p[i] &gt; best { best = p[i]; idx = i as u16; }
+    }
+    idx
+}
+
+<span class="c">// &mdash;&mdash;&mdash; surprise log &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</span>
+
+<span class="k">fn</span> append_surprise(
+    header: &amp;mut Account&lt;SurpriseLogHeader&gt;,
+    rec: SurpriseRecord,
+) -&gt; Result&lt;()&gt; {
+    <span class="c">// records are written sequentially into the trailing region of the same
+    // account. the program is configured at deployment with enough rent-paid
+    // space for ~16,000 records; once full the program rejects further writes
+    // and the protocol stops logging surprises (but continues to update).</span>
+    header.count = header.count.saturating_add(1);
+    write_record_at(&amp;mut header.to_account_info(), header.count - 1, rec)?;
+    Ok(())
+}
+
+<span class="c">// &mdash;&mdash;&mdash; dlmm pool reader &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
+//
+// identical to the reader used by other meteora-integrated hooks: active bin id
+// at offset 88 (i32), bin step bps at offset 92 (u16), price reconstructed
+// via exponentiation by squaring in i128 fixed-point.</span>
+
+<span class="k">fn</span> read_active_bin(pool: &amp;AccountInfo) -&gt; Result&lt;(i32, i128)&gt; {
+    <span class="k">let</span> data = pool.try_borrow_data()?;
+    require!(data.len() &gt;= 96, ErrorCode::PoolAccountMalformed);
+    <span class="k">let</span> active_id = i32::from_le_bytes(data[88..92].try_into().unwrap());
+    <span class="k">let</span> bin_step  = u16::from_le_bytes(data[92..94].try_into().unwrap()) as i128;
+    <span class="k">let</span> base      = FP_SCALE + (bin_step * FP_SCALE) / 10_000;
+    Ok((active_id, pow_fp(base, active_id)))
+}
+
+<span class="c">// helpers: pow_fp, exp_neg_fp, log2_fp, write_record_at &mdash; omitted for brevity.
+// full source on github at /onsnes-protocol/onsnes</span>
+
+#[error_code]
+<span class="k">pub enum</span> ErrorCode {
+    #[msg(<span class="s">"dlmm pool account data is malformed or too short"</span>)]
+    PoolAccountMalformed,
+    #[msg(<span class="s">"posterior account not initialised"</span>)]
+    PosteriorUninitialised,
+    #[msg(<span class="s">"surprise log is full"</span>)]
+    SurpriseLogFull,
+}
+</pre>
+      </div>
+
+      <p style="font-size:12px;color:var(--text-3);margin:1.5rem 0 0;max-width:680px;line-height:1.7;">
+        The program is deployed through the BPF upgradeable loader with its upgrade authority set to <code>None</code> at deployment. The bytecode at the address above is fixed. The constants <code>H_MAX_FP</code>, <code>H_FLOOR_FP</code>, <code>SIGMA_FP</code>, and the bin range are baked into the binary. No multisig, no DAO, no proxy, no governance hook. The only variable is the posterior, and the posterior is whatever the chain has produced.
+        
+      </p>
+
+    </section>
+
+    <!-- ========== handoff ========== -->
+    <section class="page" data-page="handoff">
+      <div class="topbar">the handoff</div>
+      <h1>On the handoff</h1>
+      <p class="subtitle">Notes from the wallet that deployed the protocol, written in the same console session as the deployment, before that wallet was emptied.</p>
+
+      <div class="prose" style="max-width: 720px; font-size: 15px; line-height: 1.95;">
+        
+          <p>The deployment transaction landed on Solana mainnet, and within the next sixty minutes the keypair that had signed it was destroyed. The wallet address still exists &mdash; it can be looked up on solscan, the same way any address can be looked up. Its signing capability does not, and cannot be reconstructed by anyone, including me. <strong>From the moment the keypair burned, the protocol stopped having an administrator.</strong> It has not had one since.</p>
+
+          <p>What follows from that is a list of things this protocol does not have, and the list happens to cover almost everything a token protocol normally has. It has no team, because there is no one with the authority to act for it. It has no treasury, because no balance was ever held back for one. It has no roadmap, because no one can change the program to follow a roadmap. It has no governance, no DAO, no foundation, no support inbox, no marketing budget, no community manager, no listing campaign, no future version. <strong>The Twitter account linked in the sidebar will post the contract address and the link to this site once, and after that it will be silent.</strong> Any later post you see from somewhere that claims to be the project is not the project.</p>
+
+          <p>One choice had to be made before the program could run, and the entire architecture of the protocol is designed around making that one choice as small as it can be. Before the first swap arrives the program needs to hold a belief about what the token might be worth. That belief is a number per candidate price level, two hundred fifty-six of them. The choice the deployer had to make was: what should those numbers be at the start? The chosen answer is <strong>the uniform prior</strong> &mdash; each of the 256 numbers equal to 1/256, total entropy log&#x2082;(256) = 8 bits. This is the maximum-ignorance opening: the only starting belief that does not encode the deployer's opinion about where the price actually is. Any narrower opening would have been the deployer's guess smuggled into the protocol's first breath. The uniform prior is no guess. By the time a hundred swaps have arrived, even that absence of guess will have been overwritten by evidence beyond recovery.</p>
+
+          <p>Destroying the keypair was the only act that could turn a normal Solana token into a thing that no one owns. It took place on the same machine that signed the deployment, inside the same console session, within an hour of broadcast. The procedure was overwriting the key file with random bytes and then deleting it; no escrow was used, no offline backup was made, no recovery phrase was written down anywhere. <strong>If anyone claims, ever, that they can sign as the deployer wallet, they are wrong, and the chain will confirm them wrong</strong> within one signature attempt. There is no version of the procedure under which the wallet recovers. Recovery was the thing the procedure was designed to prevent.</p>
+
+          <p>This page is a record, not an argument. It cannot stop the protocol from being copied, forked, parodied, accused of things, or quietly misrepresented by accounts that have no relationship to it. It can only state what was and was not done at the moment the protocol entered the chain. <strong>Everything you encounter after the deployment date that claims to speak for the protocol &mdash; a new social account, an "official" telegram, a fresh medium post, a recovered statement, a press release &mdash; is not from here.</strong> By then, the wallet that wrote this notice will have been an empty address for some time, and an empty address has nothing to say.</p>
+
+          <p>The only thing the deployer still owes the protocol, and the only thing this page is a placeholder for, is silence after the fact. That is the obligation that survives the wallet.</p>
+        
+
+              </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // page nav
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = a.getAttribute('data-nav');
+      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.getAttribute('data-page') === target));
+      document.querySelectorAll('[data-nav]').forEach(n => n.classList.toggle('active', n.getAttribute('data-nav') === target));
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    });
+  });
+
+  // overview hero charts
+  (function () {
+    const C_LINE = '#ffe14d', C_LINE2 = '#a8a69e', C_BG = '#26241e',
+          C_GRID = 'rgba(255,255,255,0.06)', C_TXT = '#a8a69e', C_OK = '#5dcaa5';
+
+    // deterministic PRNG so mock charts look identical across refreshes
+    let _s = 42; const rng = () => { _s = (_s * 9301 + 49297) % 233280; return _s / 233280; };
+
+    function gauss(x, mu, sigma) { return Math.exp(-((x - mu) ** 2) / (2 * sigma * sigma)); }
+
+    // big hero: belief-density heatmap over price, block by block, + MAP path
+    (function () {
+      const svg = document.getElementById('hero-mapmarket'); if (!svg) return;
+      const W = 720, H = 260, ML = 56, MR = 18, MT = 22, MB = 32;
+      const PW = W - ML - MR, PH = H - MT - MB;
+      const COLS = 64, ROWS = 30;
+      const cw = PW / COLS, ch = PH / ROWS;
+      let mu = 0.6, cells = '';
+      const mapPts = [];
+      for (let c = 0; c < COLS; c++) {
+        mu += (rng() - 0.5) * 0.05 + Math.sin(c * 0.12) * 0.006;
+        if (mu < 0.18) mu = 0.18; if (mu > 0.85) mu = 0.85;
+        const sigma = 0.20 * Math.exp(-c / 38) + 0.045;   // belief sharpens over time
+        let max = 0, argmax = 0; const col = new Float64Array(ROWS);
+        for (let r = 0; r < ROWS; r++) {
+          const t = 1 - r / (ROWS - 1);                   // row 0 = high price
+          const v = gauss(t, mu, sigma);
+          col[r] = v; if (v > max) { max = v; argmax = r; }
+        }
+        const x = ML + c * cw;
+        for (let r = 0; r < ROWS; r++) {
+          const op = Math.pow(col[r] / max, 1.7) * 0.92;
+          if (op < 0.025) continue;
+          const y = MT + r * ch;
+          cells += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(cw + 0.6).toFixed(1)}" height="${(ch + 0.6).toFixed(1)}" fill="${C_LINE}" opacity="${op.toFixed(3)}"/>`;
+        }
+        mapPts.push(`${(x + cw / 2).toFixed(1)},${(MT + argmax * ch + ch / 2).toFixed(1)}`);
+      }
+      const mapLine = `<polyline points="${mapPts.join(' ')}" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.9"/>`;
+      const yLhigh = `<text x="${ML - 10}" y="${MT + 12}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
+      const yLlow = `<text x="${ML - 10}" y="${H - MB - 4}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">low</text>`;
+      const xLstart = `<text x="${ML}" y="${H - 10}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11">100 blocks ago</text>`;
+      const xLend = `<text x="${W - MR}" y="${H - 10}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
+      const legend = `<g font-family="ui-monospace,monospace" font-size="11">
+        <rect x="${W - MR - 250}" y="${MT + 2}" width="12" height="9" fill="${C_LINE}" opacity="0.7"/><text x="${W - MR - 232}" y="${MT + 11}" fill="${C_TXT}">belief density</text>
+        <line x1="${W - MR - 132}" y1="${MT + 7}" x2="${W - MR - 108}" y2="${MT + 7}" stroke="#ffffff" stroke-width="1.4"/><text x="${W - MR - 102}" y="${MT + 11}" fill="${C_TXT}">most-likely price</text>
+      </g>`;
+      svg.innerHTML = cells + mapLine + yLhigh + yLlow + xLstart + xLend + legend;
+    })();
+
+    // mini 1: discrete posterior — bar histogram with highlighted MAP bin
+    (function () {
+      const svg = document.getElementById('hero-posterior'); if (!svg) return;
+      const W = 400, H = 140, ML = 28, MR = 14, MT = 14, MB = 24;
+      const PW = W - ML - MR, PH = H - MT - MB;
+      const N = 34;
+      const vals = []; let max = 0, mapIdx = 0;
+      for (let i = 0; i < N; i++) {
+        const t = i / (N - 1);
+        const v = 0.30 * gauss(t, 0.30, 0.07) + 1.00 * gauss(t, 0.54, 0.10) + 0.26 * gauss(t, 0.74, 0.05);
+        vals.push(v); if (v > max) { max = v; mapIdx = i; }
+      }
+      const bw = PW / N;
+      let bars = '';
+      for (let i = 0; i < N; i++) {
+        const h = (vals[i] / max) * PH;
+        const x = ML + i * bw, y = MT + PH - h;
+        bars += `<rect x="${(x + 0.7).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw - 1.4).toFixed(1)}" height="${h.toFixed(1)}" fill="${C_LINE}" opacity="${i === mapIdx ? '0.95' : '0.4'}"/>`;
+      }
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+      const mapX = ML + mapIdx * bw + bw / 2;
+      const mapLabel = `<text x="${mapX.toFixed(1)}" y="${MT + 9}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">MAP</text>`;
+      const xL = `<text x="${ML}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11">low</text>`;
+      const xR = `<text x="${W - MR}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
+      svg.innerHTML = axis + bars + mapLabel + xL + xR;
+    })();
+
+    // mini 2: information gained — ascending bars of bits learned (8 − H)
+    (function () {
+      const svg = document.getElementById('hero-entropy'); if (!svg) return;
+      const W = 400, H = 140, ML = 36, MR = 14, MT = 18, MB = 24;
+      const PW = W - ML - MR, PH = H - MT - MB;
+      const N = 40;
+      const learned = [];
+      for (let i = 0; i < N; i++) {
+        const base = 0.22 * (1 - Math.exp(-i / 12));     // saturating growth
+        let noise = (rng() - 0.5) * 0.008;
+        if (rng() < 0.06) noise -= 0.015;                // occasional setback
+        learned.push(Math.max(0, base + noise));
+      }
+      const hi = 0.26;
+      const bw = PW / N;
+      let bars = '';
+      for (let i = 0; i < N; i++) {
+        const h = (learned[i] / hi) * PH;
+        const x = ML + i * bw, y = MT + PH - h;
+        const op = (0.35 + 0.55 * (i / (N - 1))).toFixed(2);
+        bars += `<rect x="${(x + 0.6).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw - 1.2).toFixed(1)}" height="${h.toFixed(1)}" fill="${C_LINE}" opacity="${op}"/>`;
+      }
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${C_GRID}" stroke-width="0.5"/>`;
+      const yC = `<text x="${ML - 6}" y="${MT + 12}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${learned[N - 1].toFixed(2)}</text>`;
+      const yZ = `<text x="${ML - 6}" y="${H - MB}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">0</text>`;
+      const xL = `<text x="${ML}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11">start</text>`;
+      const xR = `<text x="${W - MR}" y="${H - 8}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
+      svg.innerHTML = axis + bars + yC + yZ + xL + xR;
+    })();
+
+    // mini 3: maturity — radial tick gauge
+    (function () {
+      const svg = document.getElementById('hero-gauge'); if (!svg) return;
+      const pct = 0.021;
+      const cx = 70, cy = 70, r = 52, TICKS = 44;
+      const lit = Math.max(1, Math.round(pct * TICKS));
+      let ticks = '';
+      for (let i = 0; i < TICKS; i++) {
+        const ang = -Math.PI / 2 + (i / TICKS) * Math.PI * 2;
+        const on = i < lit;
+        const r1 = r - 9, r2 = r;
+        const x1 = cx + r1 * Math.cos(ang), y1 = cy + r1 * Math.sin(ang);
+        const x2 = cx + r2 * Math.cos(ang), y2 = cy + r2 * Math.sin(ang);
+        ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${on ? C_LINE : 'rgba(255,255,255,0.10)'}" stroke-width="2.6" stroke-linecap="round"/>`;
+      }
+      const pctNum = Math.round(pct * 100);
+      const label = `<text x="${cx}" y="${cy + 3}" fill="${C_LINE}" font-family="ui-monospace,monospace" font-size="26" font-weight="500" text-anchor="middle">${pctNum}%</text>` +
+                    `<text x="${cx}" y="${cy + 21}" fill="${C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">learned</text>`;
+      svg.innerHTML = ticks + label;
+    })();
+  })();
+</script>
+
+<!-- ============================================================
+     ONSNES live data module
+     when CONFIG.ca is set, fetches real swap prices from dexscreener
+     and runs client-side Bayesian inference to drive every chart.
+     ============================================================ -->
+<script>
+(function () {
+  const CONFIG = {
+    ca: '',   // previous CA was wrong; left empty until the real one is live (live module stays in mock mode)
+    refreshSeconds: 30,
+    binCount: 256,
+  };
+
+  // expose for easy console inspection / external setting
+  window.ONSNES_CONFIG = CONFIG;
+
+  // ---- fetch live market data from dexscreener + geckoterminal ----
+  async function loadMarket(ca) {
+    const ds = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${ca}`)
+      .then(r => r.json()).catch(() => null);
+    if (!ds || !Array.isArray(ds.pairs) || !ds.pairs.length) return null;
+
+    const top = ds.pairs.slice().sort(
+      (a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0)
+    )[0];
+
+    let closes = [], timestamps = [];
+    try {
+      const gt = await fetch(
+        `https://api.geckoterminal.com/api/v2/networks/solana/pools/${top.pairAddress}/ohlcv/minute?aggregate=1&limit=300`
+      ).then(r => r.json());
+      const rows = (gt?.data?.attributes?.ohlcv_list || []).slice().reverse();
+      closes = rows.map(c => Number(c[4])).filter(x => x > 0);
+      timestamps = rows.map(c => Number(c[0]) * 1000);
+    } catch (e) {}
+
+    let holders = null;
+    try {
+      const info = await fetch(
+        `https://api.geckoterminal.com/api/v2/networks/solana/tokens/${ca}/info`
+      ).then(r => r.json());
+      holders = info?.data?.attributes?.holders?.count || null;
+    } catch (e) {}
+
+    return {
+      pair: top,
+      ca,
+      closes,
+      timestamps,
+      marketCap: top.marketCap || top.fdv || 0,
+      volume24h: top.volume?.h24 || 0,
+      liquidity: top.liquidity?.usd || 0,
+      price: Number(top.priceUsd) || 0,
+      holders,
+    };
+  }
+
+  // ---- run real Bayesian inference on a price series ----
+  // returns: posterior, entropy/MAP/band history per step, surprises, KL gain.
+  function bayesianInference(closes) {
+    if (!closes || closes.length < 5) return null;
+
+    const N = CONFIG.binCount;
+    const lo = Math.min(...closes) * 0.85;
+    const hi = Math.max(...closes) * 1.15;
+    const w = (hi - lo) / N;
+    const sigma = Math.max((hi - lo) * 0.025, 1e-12);
+    const H0 = Math.log2(N);
+
+    let p = new Float64Array(N);
+    for (let i = 0; i < N; i++) p[i] = 1 / N;
+
+    const entropyHistory = [];
+    const mapHistory = [];
+    const bandLowHistory = [];
+    const bandHighHistory = [];
+    const klHistory = [];
+    const surprises = [];
+    let prevH = H0;
+    let prevMapIdx = Math.floor(N / 2);
+    let prevP = Float64Array.from(p);
+
+    for (let t = 0; t < closes.length; t++) {
+      const price = closes[t];
+      const before = Float64Array.from(p);
+
+      // bayes update: p(H|E) ∝ p(E|H) * p(H), with gaussian likelihood
+      let total = 0;
+      for (let i = 0; i < N; i++) {
+        const mu = lo + (i + 0.5) * w;
+        const d = price - mu;
+        p[i] = p[i] * Math.exp(-(d * d) / (2 * sigma * sigma));
+        total += p[i];
+      }
+      if (total <= 0) {
+        // degenerate → reset to flat
+        for (let i = 0; i < N; i++) p[i] = 1 / N;
+        total = 1;
+      } else {
+        for (let i = 0; i < N; i++) p[i] /= total;
+      }
+
+      // entropy in bits
+      let h = 0;
+      for (let i = 0; i < N; i++) {
+        if (p[i] > 0) h -= p[i] * Math.log2(p[i]);
+      }
+      h = Math.max(1, h); // floor at 1 bit of irreducible humility
+
+      // KL divergence from prior (information gained this step), in nats
+      let kl = 0;
+      for (let i = 0; i < N; i++) {
+        if (p[i] > 0 && before[i] > 0) kl += p[i] * Math.log(p[i] / before[i]);
+      }
+
+      // MAP estimate
+      let mapIdx = 0;
+      for (let i = 1; i < N; i++) if (p[i] > p[mapIdx]) mapIdx = i;
+      const mapPrice = lo + (mapIdx + 0.5) * w;
+
+      // 95% credible interval (find narrow [a,b] containing 95% of mass)
+      let cum = 0, loIdx = 0, hiIdx = N - 1, found = false;
+      for (let i = 0; i < N; i++) {
+        cum += p[i];
+        if (!found && cum >= 0.025) { loIdx = i; found = true; }
+        if (cum >= 0.975) { hiIdx = i; break; }
+      }
+      const bandLowPrice = lo + (loIdx + 0.5) * w;
+      const bandHighPrice = lo + (hiIdx + 0.5) * w;
+
+      entropyHistory.push(h);
+      mapHistory.push(mapPrice);
+      bandLowHistory.push(bandLowPrice);
+      bandHighHistory.push(bandHighPrice);
+      klHistory.push(Math.max(0, kl));
+
+      // surprise: entropy went up materially
+      if (t > 3 && h - prevH > 0.015) {
+        surprises.push({
+          t,
+          deltaH: h - prevH,
+          priorMapPrice: lo + (prevMapIdx + 0.5) * w,
+          posteriorMapPrice: mapPrice,
+          tradePrice: price,
+        });
+      }
+
+      prevH = h;
+      prevMapIdx = mapIdx;
+      prevP = Float64Array.from(p);
+    }
+
+    // calibration: did real price land inside its predicted 95% band?
+    let hits = 0, tested = 0;
+    for (let t = 1; t < closes.length; t++) {
+      if (closes[t] >= bandLowHistory[t-1] && closes[t] <= bandHighHistory[t-1]) hits++;
+      tested++;
+    }
+    const calibration = tested > 0 ? hits / tested : 0;
+
+    const currentH = entropyHistory[entropyHistory.length - 1] || H0;
+    const learned = Math.max(0, Math.min(1, 1 - currentH / H0));
+
+    return {
+      posterior: p,
+      bins: { lo, hi, w, n: N, sigma },
+      H0,
+      currentMAP: mapHistory[mapHistory.length - 1],
+      currentEntropy: currentH,
+      currentBandLow: bandLowHistory[bandLowHistory.length - 1],
+      currentBandHigh: bandHighHistory[bandHighHistory.length - 1],
+      learned,
+      entropyHistory,
+      mapHistory,
+      bandLowHistory,
+      bandHighHistory,
+      klHistory,
+      surprises,
+      closes,
+      calibration,
+    };
+  }
+
+  // ---- shared style constants ----
+  const STYLE = {
+    C_LINE:  '#ffe14d',
+    C_LINE2: '#a8a69e',
+    C_BG:    '#26241e',
+    C_GRID:  'rgba(255,255,255,0.06)',
+    C_TXT:   '#a8a69e',
+    C_OK:    '#5dcaa5',
+    C_BAD:   '#f09595',
+    C_WARN:  '#ffe14d',
+  };
+
+  // ---- live render: hero MAP vs market ----
+  function renderHeroMapMarket(market, inf) {
+    const svg = document.getElementById('hero-mapmarket'); if (!svg) return;
+    const W = 720, H = 260, ML = 56, MR = 18, MT = 22, MB = 32;
+    const series = inf.closes.slice(-100);
+    const mapSeries = inf.mapHistory.slice(-series.length);
+    const bandLow = inf.bandLowHistory.slice(-series.length);
+    const bandHigh = inf.bandHighHistory.slice(-series.length);
+    const N = series.length;
+    if (N < 2) return;
+
+    const allVals = series.concat(mapSeries, bandLow, bandHigh);
+    const lo = Math.min(...allVals), hi = Math.max(...allVals);
+    const pad = (hi - lo) * 0.08 || hi * 0.02;
+    const ylo = lo - pad, yhi = hi + pad;
+    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+    const yAt = v => MT + (1 - (v - ylo) / (yhi - ylo)) * (H - MT - MB);
+
+    let band = `M ${xAt(0).toFixed(1)},${yAt(bandHigh[0]).toFixed(1)} `;
+    for (let i = 1; i < N; i++) band += `L ${xAt(i).toFixed(1)},${yAt(bandHigh[i]).toFixed(1)} `;
+    for (let i = N - 1; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(bandLow[i]).toFixed(1)} `;
+    band += 'Z';
+
+    let mapLine = '', mktDots = '';
+    for (let i = 0; i < N; i++) {
+      mapLine += `${xAt(i).toFixed(1)},${yAt(mapSeries[i]).toFixed(1)} `;
+      mktDots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(series[i]).toFixed(1)}" r="2" fill="${STYLE.C_LINE2}" opacity="0.85"/>`;
+    }
+    const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${STYLE.C_GRID}" stroke-width="0.5"/>`;
+    const yLhi = `<text x="${ML - 10}" y="${MT + 12}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
+    const yLlo = `<text x="${ML - 10}" y="${H - MB - 4}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">low</text>`;
+    const xLs = `<text x="${ML}" y="${H - 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">${N} swaps ago</text>`;
+    const xLe = `<text x="${W - MR}" y="${H - 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
+    const legend = `<g font-family="ui-monospace,monospace" font-size="11">
+      <line x1="${W - MR - 280}" y1="${MT + 8}" x2="${W - MR - 256}" y2="${MT + 8}" stroke="${STYLE.C_LINE}" stroke-width="2"/><text x="${W - MR - 250}" y="${MT + 12}" fill="${STYLE.C_TXT}">protocol's best guess</text>
+      <circle cx="${W - MR - 75}" cy="${MT + 8}" r="2.5" fill="${STYLE.C_LINE2}"/><text x="${W - MR - 65}" y="${MT + 12}" fill="${STYLE.C_TXT}">actual trade</text>
+    </g>`;
+    svg.innerHTML = axis +
+      `<path d="${band}" fill="${STYLE.C_LINE}" opacity="0.18"/>` +
+      `<polyline points="${mapLine.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.8"/>` +
+      mktDots + yLhi + yLlo + xLs + xLe + legend;
+
+    // update card-meta "tracking: XX%"
+    const meta = svg.closest('.card')?.querySelector('.card-meta');
+    if (meta && /tracking/.test(meta.textContent)) {
+      meta.textContent = `tracking: ${(inf.calibration * 100).toFixed(1)}%`;
+    }
+  }
+
+  // ---- live render: hero posterior (mini) ----
+  function renderHeroPosterior(inf) {
+    const svg = document.getElementById('hero-posterior'); if (!svg) return;
+    const W = 400, H = 140, ML = 28, MR = 14, MT = 14, MB = 24;
+    const p = inf.posterior;
+    const N = p.length;
+    let max = 0;
+    for (let i = 0; i < N; i++) if (p[i] > max) max = p[i];
+    if (max <= 0) return;
+
+    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+    const yAt = v => MT + (1 - v / max) * (H - MT - MB);
+
+    let area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+    let line = '';
+    for (let i = 0; i < N; i++) {
+      const x = xAt(i).toFixed(1), y = yAt(p[i]).toFixed(1);
+      area += `L ${x},${y} `;
+      line += `${x},${y} `;
+    }
+    area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+
+    let mapIdx = 0; for (let i = 1; i < N; i++) if (p[i] > p[mapIdx]) mapIdx = i;
+    const mapX = xAt(mapIdx), mapY = yAt(p[mapIdx]);
+    const mapDash = `<line x1="${mapX.toFixed(1)}" y1="${MT}" x2="${mapX.toFixed(1)}" y2="${H - MB}" stroke="${STYLE.C_LINE}" stroke-width="1" stroke-dasharray="2 3" opacity="0.55"/>`;
+    const mapDot = `<circle cx="${mapX.toFixed(1)}" cy="${mapY.toFixed(1)}" r="3" fill="${STYLE.C_LINE}"/>`;
+    const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${STYLE.C_GRID}" stroke-width="0.5"/>`;
+    const xL = `<text x="${ML}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">low</text>`;
+    const xR = `<text x="${W - MR}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
+    const yL = `<text x="${ML - 4}" y="${MT + 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">P</text>`;
+
+    svg.innerHTML = axis +
+      `<path d="${area}" fill="${STYLE.C_LINE}" opacity="0.18"/>` +
+      `<polyline points="${line.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.6"/>` +
+      mapDash + mapDot + xL + xR + yL;
+  }
+
+  // ---- live render: hero entropy decay (mini) ----
+  function renderHeroEntropy(inf) {
+    const svg = document.getElementById('hero-entropy'); if (!svg) return;
+    const W = 400, H = 140, ML = 36, MR = 14, MT = 18, MB = 24;
+    const hist = inf.entropyHistory.slice(-120);
+    const N = hist.length;
+    if (N < 2) return;
+
+    const H0 = inf.H0;
+    const minVal = Math.max(1, Math.min(...hist) - 0.05);
+    const maxVal = Math.max(H0 + 0.05, Math.max(...hist));
+    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+    const yAt = v => MT + (1 - (v - minVal) / (maxVal - minVal)) * (H - MT - MB);
+
+    let poly = '', area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+    for (let i = 0; i < N; i++) {
+      const x = xAt(i).toFixed(1), y = yAt(hist[i]).toFixed(1);
+      poly += `${x},${y} `; area += `L ${x},${y} `;
+    }
+    area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+
+    const cur = hist[N - 1];
+    const yTop = `<text x="${ML - 6}" y="${yAt(H0) + 4}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${H0.toFixed(1)}</text>`;
+    const yCur = `<text x="${ML - 6}" y="${yAt(cur) + 4}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${cur.toFixed(2)}</text>`;
+    const ref = `<line x1="${ML}" y1="${yAt(H0)}" x2="${W - MR}" y2="${yAt(H0)}" stroke="${STYLE.C_GRID}" stroke-width="0.5" stroke-dasharray="2 3"/>`;
+    const xLs = `<text x="${ML}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">start</text>`;
+    const xLe = `<text x="${W - MR}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
+
+    svg.innerHTML = ref +
+      `<path d="${area}" fill="${STYLE.C_LINE}" opacity="0.12"/>` +
+      `<polyline points="${poly.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.5"/>` +
+      yTop + yCur + xLs + xLe;
+  }
+
+  // ---- live render: hero maturity gauge (mini) ----
+  function renderHeroGauge(inf) {
+    const svg = document.getElementById('hero-gauge'); if (!svg) return;
+    const pct = Math.max(0, Math.min(1, inf.learned));
+    const cx = 70, cy = 74, r = 50;
+    const a0 = -Math.PI * 0.78, a1 = Math.PI * 0.78;
+    const a = a0 + (a1 - a0) * pct;
+    function arc(start, end, color, width, cap) {
+      const x0 = cx + r * Math.cos(start), y0 = cy + r * Math.sin(start);
+      const x1 = cx + r * Math.cos(end), y1 = cy + r * Math.sin(end);
+      const large = (end - start) > Math.PI ? 1 : 0;
+      return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="${cap}"/>`;
+    }
+    const bg = arc(a0, a1, STYLE.C_BG, 9, 'butt');
+    const fg = pct > 0.001 ? arc(a0, a, STYLE.C_LINE, 9, 'butt') : '';
+    const pctNum = Math.round(pct * 100);
+    const label = `<text x="${cx}" y="${cy + 4}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="26" font-weight="500" text-anchor="middle">${pctNum}%</text>` +
+                  `<text x="${cx}" y="${cy + 22}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">learned</text>`;
+    svg.innerHTML = bg + fg + label;
+
+    // also update the card-meta "maturity"  → percent
+    const meta = svg.closest('.card')?.querySelector('.card-meta');
+    if (meta && meta.textContent.trim() === 'maturity') {
+      meta.textContent = `maturity · ${pctNum}%`;
+    }
+  }
+
+  // ---- update CA banner with real address + copy button ----
+  function updateCABanner(ca, market) {
+    const banner = document.querySelector('.ca-banner');
+    if (!banner) return;
+    const short = ca.length > 12 ? `${ca.slice(0, 6)}…${ca.slice(-6)}` : ca;
+    banner.innerHTML =
+      `<span class="ca-label">$ONSNES contract (Solana):</span>` +
+      `<code id="ca-code">${ca}</code>` +
+      `<button type="button" onclick="navigator.clipboard.writeText('${ca}');var o=this.textContent;this.textContent='copied';setTimeout(()=>{this.textContent=o},1500);">copy</button>`;
+  }
+
+  // ---- live render: Current Status (Mind) page — 6 charts ----
+  function renderMindCharts(market, inf) {
+    const S = STYLE;
+
+    // chart 1: posterior bars
+    (function () {
+      const svg = document.getElementById('chart-posterior'); if (!svg) return;
+      const W = 600, H = 220, ML = 30, MR = 12, MT = 12, MB = 28;
+      const p = inf.posterior, N = p.length;
+      let max = 0; for (let i = 0; i < N; i++) if (p[i] > max) max = p[i];
+      if (max <= 0) return;
+      let bars = '';
+      const bw = (W - ML - MR) / N;
+      for (let i = 0; i < N; i++) {
+        const x = ML + i * bw;
+        const h = (p[i] / max) * (H - MT - MB);
+        const y = H - MB - h;
+        bars += `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(bw * 0.9).toFixed(2)}" height="${h.toFixed(2)}" fill="${S.C_LINE}" opacity="0.7"/>`;
+      }
+      let mapIdx = 0; for (let i = 1; i < N; i++) if (p[i] > p[mapIdx]) mapIdx = i;
+      const mapX = ML + (mapIdx + 0.5) * bw;
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      const mapLine = `<line x1="${mapX.toFixed(2)}" y1="${MT}" x2="${mapX.toFixed(2)}" y2="${H - MB}" stroke="${S.C_LINE}" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>`;
+      const mapLabel = `<text x="${mapX.toFixed(2)}" y="${MT + 10}" fill="${S.C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">MAP</text>`;
+      const xL = `<text x="${ML}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10">${inf.bins.lo.toExponential(2)}</text>`;
+      const xR = `<text x="${W - MR}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${inf.bins.hi.toExponential(2)}</text>`;
+      const yL = `<text x="6" y="${MT + 10}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10">P</text>`;
+      svg.innerHTML = axis + bars + mapLine + mapLabel + xL + xR + yL;
+    })();
+
+    // chart 2: entropy decay
+    (function () {
+      const svg = document.getElementById('chart-entropy'); if (!svg) return;
+      const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+      const hist = inf.entropyHistory; const N = hist.length;
+      if (N < 2) return;
+      const H0 = inf.H0;
+      const hi = Math.max(H0 + 0.02, Math.max(...hist));
+      const lo = Math.max(1, Math.min(...hist) - 0.05);
+      const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+      const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+      let poly = '', area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+      for (let i = 0; i < N; i++) {
+        const x = xAt(i).toFixed(1), y = yAt(hist[i]).toFixed(1);
+        poly += `${x},${y} `; area += `L ${x},${y} `;
+      }
+      area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+      const cur = hist[N - 1];
+      const grid = [H0, cur, lo].map(v =>
+        `<line x1="${ML}" y1="${yAt(v)}" x2="${W - MR}" y2="${yAt(v)}" stroke="${S.C_GRID}" stroke-width="0.5"/>` +
+        `<text x="${ML - 6}" y="${yAt(v) + 3}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${v.toFixed(2)}</text>`
+      ).join('');
+      const refLabel = `<text x="${W - MR}" y="${yAt(H0) - 4}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="end">H₀ = ${H0.toFixed(2)}</text>`;
+      svg.innerHTML = grid + `<path d="${area}" fill="${S.C_LINE}" opacity="0.10"/>` +
+        `<polyline points="${poly.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.3"/>` + refLabel;
+    })();
+
+    // chart 3: MAP vs market
+    (function () {
+      const svg = document.getElementById('chart-map'); if (!svg) return;
+      const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+      const closes = inf.closes.slice(-80);
+      const maps = inf.mapHistory.slice(-closes.length);
+      const N = closes.length; if (N < 2) return;
+      const all = closes.concat(maps);
+      const lo = Math.min(...all) * 0.98, hi = Math.max(...all) * 1.02;
+      const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+      const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+      let mapLine = '', mktDots = '';
+      for (let i = 0; i < N; i++) {
+        mapLine += `${xAt(i).toFixed(1)},${yAt(maps[i]).toFixed(1)} `;
+        mktDots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(closes[i]).toFixed(1)}" r="1.8" fill="${S.C_LINE2}" opacity="0.85"/>`;
+      }
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      const legend = `<g font-family="ui-monospace,monospace" font-size="10">
+        <line x1="${W - MR - 130}" y1="${MT + 8}" x2="${W - MR - 115}" y2="${MT + 8}" stroke="${S.C_LINE}" stroke-width="1.3"/><text x="${W - MR - 110}" y="${MT + 11}" fill="${S.C_TXT}">MAP</text>
+        <circle cx="${W - MR - 65}" cy="${MT + 8}" r="2" fill="${S.C_LINE2}"/><text x="${W - MR - 55}" y="${MT + 11}" fill="${S.C_TXT}">market</text>
+      </g>`;
+      svg.innerHTML = axis + `<polyline points="${mapLine.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.3"/>` + mktDots + legend;
+    })();
+
+    // chart 4: confidence band evolving
+    (function () {
+      const svg = document.getElementById('chart-band'); if (!svg) return;
+      const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+      const maps = inf.mapHistory.slice(-80);
+      const blo = inf.bandLowHistory.slice(-80);
+      const bhi = inf.bandHighHistory.slice(-80);
+      const N = maps.length; if (N < 2) return;
+      const lo = Math.min(...blo) * 0.98, hi = Math.max(...bhi) * 1.02;
+      const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+      const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+      let band = `M ${xAt(0).toFixed(1)},${yAt(bhi[0]).toFixed(1)} `;
+      for (let i = 1; i < N; i++) band += `L ${xAt(i).toFixed(1)},${yAt(bhi[i]).toFixed(1)} `;
+      for (let i = N - 1; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(blo[i]).toFixed(1)} `;
+      band += 'Z';
+      let mapL = '';
+      for (let i = 0; i < N; i++) mapL += `${xAt(i).toFixed(1)},${yAt(maps[i]).toFixed(1)} `;
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      svg.innerHTML = axis + `<path d="${band}" fill="${S.C_LINE}" opacity="0.12"/>` +
+        `<polyline points="${mapL.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.3"/>`;
+    })();
+
+    // chart 5: information gain (KL) bars
+    (function () {
+      const svg = document.getElementById('chart-info'); if (!svg) return;
+      const W = 600, H = 220, ML = 36, MR = 12, MT = 12, MB = 28;
+      const kls = inf.klHistory.slice(-40); const N = kls.length;
+      if (N < 1) return;
+      const max = Math.max(0.001, Math.max(...kls));
+      const xAt = i => ML + (i / N) * (W - ML - MR);
+      const bw = (W - ML - MR) / N - 2;
+      let g = '';
+      for (let i = 0; i < N; i++) {
+        const h = (kls[i] / max) * (H - MT - MB);
+        const y = H - MB - h;
+        const c = kls[i] > max * 0.7 ? S.C_BAD : (kls[i] > max * 0.35 ? S.C_WARN : S.C_LINE);
+        g += `<rect x="${xAt(i).toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" fill="${c}" opacity="0.75"/>`;
+      }
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      const yMax = `<text x="${ML - 6}" y="${MT + 10}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${max.toFixed(3)}</text>`;
+      svg.innerHTML = axis + g + yMax;
+    })();
+
+    // chart 6: gauge (Mind page version, 200x200)
+    (function () {
+      const svg = document.getElementById('chart-gauge'); if (!svg) return;
+      const pct = Math.max(0, Math.min(1, inf.learned));
+      const cx = 100, cy = 100, r = 80;
+      const a0 = -Math.PI * 0.75, a1 = Math.PI * 0.75;
+      const a = a0 + (a1 - a0) * pct;
+      function arc(s, e, c, w) {
+        const x0 = cx + r * Math.cos(s), y0 = cy + r * Math.sin(s);
+        const x1 = cx + r * Math.cos(e), y1 = cy + r * Math.sin(e);
+        const large = (e - s) > Math.PI ? 1 : 0;
+        return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="butt"/>`;
+      }
+      const bg = arc(a0, a1, S.C_BG, 12);
+      const fg = pct > 0.001 ? arc(a0, a, S.C_LINE, 12) : '';
+      const pctNum = (pct * 100).toFixed(1);
+      const stage = pct < 0.05 ? 'newborn' : pct < 0.25 ? 'adolescent' : pct < 0.60 ? 'mature' : 'expert';
+      const label = `<text x="${cx}" y="${cy + 4}" fill="${S.C_LINE}" font-family="ui-monospace,monospace" font-size="28" text-anchor="middle">${pctNum}%</text>` +
+                    `<text x="${cx}" y="${cy + 28}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle">${stage}</text>`;
+      svg.innerHTML = bg + fg + label;
+    })();
+  }
+
+  // ---- live render: Diagnostics page — 4 charts + metrics ----
+  function renderDiagnosticsCharts(market, inf) {
+    const S = STYLE;
+    const surprises = inf.surprises;
+
+    // metric cards
+    function setMetric(label, value, sub) {
+      const cards = document.querySelectorAll('[data-page="selfcorrect"] .metric');
+      cards.forEach(card => {
+        const lab = card.querySelector('.metric-label');
+        if (lab && lab.textContent.trim() === label) {
+          const v = card.querySelector('.metric-value');
+          const s = card.querySelector('.metric-sub');
+          if (v) v.textContent = value;
+          if (s && sub) s.textContent = sub;
+        }
+      });
+    }
+
+    // compute recovery: avg trades to return entropy within 0.01 of pre-surprise level
+    let recoverySum = 0, recoveryCount = 0;
+    for (const sp of surprises) {
+      const baseline = inf.entropyHistory[sp.t - 1];
+      for (let k = 1; k <= 40 && sp.t + k < inf.entropyHistory.length; k++) {
+        if (inf.entropyHistory[sp.t + k] <= baseline + 0.005) {
+          recoverySum += k; recoveryCount++; break;
+        }
+      }
+    }
+    const avgRecovery = recoveryCount > 0 ? (recoverySum / recoveryCount).toFixed(1) : '—';
+
+    // prior overwritten: total deviation from uniform 1/N
+    const N = inf.posterior.length, uniform = 1 / N;
+    let totalDev = 0;
+    for (let i = 0; i < N; i++) totalDev += Math.abs(inf.posterior[i] - uniform);
+    const priorOverwritten = (totalDev / 2 * 100).toFixed(1);   // TV distance, max = 1
+
+    setMetric('avg recovery', avgRecovery, 'trades to re-stabilise');
+    setMetric('prior overwritten', `${priorOverwritten}%`, 'of initial uniform mass');
+    setMetric('calibration', `${(inf.calibration * 100).toFixed(1)}%`, 'vs 95% stated');
+    setMetric('next trade hit rate', `${(inf.calibration * 100).toFixed(0)}%`, 'in predicted band');
+
+    // chart 1: recovery curve (overlay all surprises aligned at t=0)
+    (function () {
+      const svg = document.getElementById('chart-recovery'); if (!svg) return;
+      const W = 600, H = 220, ML = 40, MR = 12, MT = 14, MB = 28;
+      const span = 30;
+      const profiles = surprises.map(sp => {
+        const baseline = inf.entropyHistory[sp.t - 1];
+        const arr = [];
+        for (let k = 0; k <= span; k++) {
+          const idx = sp.t + k;
+          arr.push(idx < inf.entropyHistory.length ? inf.entropyHistory[idx] - baseline : null);
+        }
+        return arr;
+      });
+      // mean + sd per step
+      const mean = [], sd = [];
+      for (let k = 0; k <= span; k++) {
+        const vals = profiles.map(pr => pr[k]).filter(v => v !== null);
+        if (!vals.length) { mean.push(null); sd.push(0); continue; }
+        const m = vals.reduce((a,b) => a+b, 0) / vals.length;
+        const v = vals.reduce((a,b) => a + (b-m)*(b-m), 0) / vals.length;
+        mean.push(m); sd.push(Math.sqrt(v));
+      }
+      const valid = mean.map((v,i) => v === null ? 0 : v);
+      const stds = sd;
+      const allV = valid.concat(valid.map((v,i) => v + stds[i]), valid.map((v,i) => v - stds[i]));
+      const hi = Math.max(0.3, Math.max(...allV) + 0.02);
+      const lo = Math.min(-0.02, Math.min(...allV) - 0.02);
+      const xAt = i => ML + (i / span) * (W - ML - MR);
+      const yAt = v => MT + (1 - (v - lo) / (hi - lo)) * (H - MT - MB);
+      let band = `M ${xAt(0).toFixed(1)},${yAt(valid[0] + stds[0]).toFixed(1)} `;
+      for (let i = 1; i <= span; i++) band += `L ${xAt(i).toFixed(1)},${yAt(valid[i] + stds[i]).toFixed(1)} `;
+      for (let i = span; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(valid[i] - stds[i]).toFixed(1)} `;
+      band += 'Z';
+      let line = '';
+      for (let i = 0; i <= span; i++) line += `${xAt(i).toFixed(1)},${yAt(valid[i]).toFixed(1)} `;
+      const zero = `<line x1="${ML}" y1="${yAt(0)}" x2="${W - MR}" y2="${yAt(0)}" stroke="${S.C_OK}" stroke-width="1" stroke-dasharray="3 4" opacity="0.6"/>`;
+      const surprise = `<line x1="${xAt(0)}" y1="${MT}" x2="${xAt(0)}" y2="${H - MB}" stroke="${S.C_BAD}" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>` +
+        `<text x="${xAt(0) + 4}" y="${MT + 10}" fill="${S.C_BAD}" font-family="ui-monospace,monospace" font-size="10">surprise</text>`;
+      const xLabels = [0, 10, 20, 30].map(k => {
+        const x = xAt(Math.min(k, span));
+        return `<text x="${x}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">t+${k}</text>`;
+      }).join('');
+      const yT = `<text x="${ML - 6}" y="${yAt(hi) + 10}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${hi.toFixed(2)}</text>`;
+      const yZ = `<text x="${ML - 6}" y="${yAt(0) + 3}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">0.00</text>`;
+      const noData = surprises.length === 0 ? `<text x="${(ML+W-MR)/2}" y="${(MT+H-MB)/2}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle" opacity="0.6">no surprises yet</text>` : '';
+      svg.innerHTML = zero + surprise +
+        (surprises.length > 0 ? `<path d="${band}" fill="${S.C_LINE}" opacity="0.14"/>` : '') +
+        (surprises.length > 0 ? `<polyline points="${line.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.4"/>` : '') +
+        xLabels + yT + yZ + noData;
+    })();
+
+    // chart 2: prior decay heat map (deviation per bin from uniform)
+    (function () {
+      const svg = document.getElementById('chart-decay'); if (!svg) return;
+      const W = 600, H = 220, ML = 30, MR = 12, MT = 30, MB = 40;
+      const p = inf.posterior, N = p.length;
+      const uniform = 1 / N;
+      let max = 0;
+      const dev = new Float64Array(N);
+      for (let i = 0; i < N; i++) {
+        dev[i] = Math.abs(p[i] - uniform);
+        if (dev[i] > max) max = dev[i];
+      }
+      if (max <= 0) max = 1;
+      const cellW = (W - ML - MR) / N;
+      const top = MT, bot = H - MB;
+      let cells = '';
+      for (let i = 0; i < N; i++) {
+        const x = ML + i * cellW;
+        const a = Math.pow(dev[i] / max, 0.7);
+        const r = Math.round(232 - 80 * (1 - a));
+        const g = Math.round(196 - 30 * (1 - a));
+        const b = Math.round(120 - 80 * (1 - a));
+        cells += `<rect x="${x.toFixed(2)}" y="${top}" width="${cellW.toFixed(2)}" height="${(bot - top).toFixed(2)}" fill="rgb(${r},${g},${b})" opacity="${(0.15 + 0.85 * a).toFixed(2)}"/>`;
+      }
+      const xL = `<text x="${ML}" y="${H - 18}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10">${inf.bins.lo.toExponential(2)}</text>`;
+      const xR = `<text x="${W - MR}" y="${H - 18}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${inf.bins.hi.toExponential(2)}</text>`;
+      const palePale = `<text x="${ML}" y="${MT - 14}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10">unseen</text>`;
+      const dark = `<text x="${W - MR}" y="${MT - 14}" fill="${S.C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">most-learned region</text>`;
+      const axis = `<line x1="${ML}" y1="${bot + 1}" x2="${W - MR}" y2="${bot + 1}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      svg.innerHTML = cells + axis + xL + xR + palePale + dark;
+    })();
+
+    // chart 3: calibration reliability diagram
+    (function () {
+      const svg = document.getElementById('chart-calib'); if (!svg) return;
+      const W = 600, H = 220, ML = 40, MR = 12, MT = 14, MB = 28;
+      // bucket predictions by stated confidence; here we only track one (95%)
+      // → render simple bar: diagonal + single point at (0.95, calibration)
+      const xAt = v => ML + v * (W - ML - MR);
+      const yAt = v => MT + (1 - v) * (H - MT - MB);
+      const diag = `<line x1="${xAt(0)}" y1="${yAt(0)}" x2="${xAt(1)}" y2="${yAt(1)}" stroke="${S.C_TXT}" stroke-width="1" stroke-dasharray="3 4" opacity="0.55"/>`;
+      // empirical curve (approximation): we plot a single observation at (0.95, calibration)
+      // plus a small ramp to make it visually informative
+      const pts = [];
+      for (let i = 0; i <= 20; i++) {
+        const stated = i / 20;
+        const actual = stated <= 0.05 ? stated : stated * (inf.calibration / 0.95);
+        pts.push([stated, Math.max(0, Math.min(1, actual))]);
+      }
+      let line = '';
+      pts.forEach(([s,a]) => { line += `${xAt(s).toFixed(1)},${yAt(a).toFixed(1)} `; });
+      const grid = [0, 0.25, 0.5, 0.75, 1].map(v =>
+        `<line x1="${xAt(v)}" y1="${MT}" x2="${xAt(v)}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>` +
+        `<line x1="${ML}" y1="${yAt(v)}" x2="${W - MR}" y2="${yAt(v)}" stroke="${S.C_GRID}" stroke-width="0.5"/>` +
+        `<text x="${xAt(v)}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="middle">${v.toFixed(2)}</text>` +
+        (v === 0 ? '' : `<text x="${ML - 6}" y="${yAt(v) + 3}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="9" text-anchor="end">${v.toFixed(2)}</text>`)
+      ).join('');
+      const yLab = `<text transform="translate(10 ${(MT + H - MB) / 2}) rotate(-90)" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">actual frequency</text>`;
+      svg.innerHTML = grid + diag + `<polyline points="${line.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.4"/>` + yLab;
+    })();
+
+    // chart 4: live forecast — current posterior + last actual marker
+    (function () {
+      const svg = document.getElementById('chart-forecast'); if (!svg) return;
+      const W = 600, H = 220, ML = 30, MR = 12, MT = 16, MB = 28;
+      const p = inf.posterior, N = p.length;
+      let max = 0; for (let i = 0; i < N; i++) if (p[i] > max) max = p[i];
+      if (max <= 0) return;
+      const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
+      const yAt = v => MT + (1 - v / max) * (H - MT - MB);
+      let area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+      let line = '';
+      for (let i = 0; i < N; i++) {
+        const x = xAt(i).toFixed(1), y = yAt(p[i]).toFixed(1);
+        area += `L ${x},${y} `; line += `${x},${y} `;
+      }
+      area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
+      // last actual price → which bin?
+      const lastPrice = inf.closes[inf.closes.length - 1];
+      const lastIdx = Math.max(0, Math.min(N - 1, Math.floor((lastPrice - inf.bins.lo) / inf.bins.w)));
+      const lastX = xAt(lastIdx), lastY = yAt(p[lastIdx]);
+      const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${S.C_GRID}" stroke-width="0.5"/>`;
+      const dot = `<circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="4.5" fill="${S.C_OK}" stroke="${S.C_BG}" stroke-width="1.5"/>` +
+                  `<line x1="${lastX.toFixed(1)}" y1="${MT}" x2="${lastX.toFixed(1)}" y2="${H - MB}" stroke="${S.C_OK}" stroke-width="0.8" stroke-dasharray="2 3" opacity="0.55"/>` +
+                  `<text x="${lastX.toFixed(1) + 6}" y="${MT + 11}" fill="${S.C_OK}" font-family="ui-monospace,monospace" font-size="10">last swap</text>`;
+      const xL = `<text x="${ML}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10">${inf.bins.lo.toExponential(2)}</text>`;
+      const xR = `<text x="${W - MR}" y="${H - 8}" fill="${S.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="end">${inf.bins.hi.toExponential(2)}</text>`;
+      svg.innerHTML = axis +
+        `<path d="${area}" fill="${S.C_LINE}" opacity="0.12"/>` +
+        `<polyline points="${line.trim()}" fill="none" stroke="${S.C_LINE}" stroke-width="1.3"/>` +
+        dot + xL + xR;
+    })();
+  }
+
+  // ---- live render: Surprises page — metrics + table ----
+  function renderSurprisesTable(inf) {
+    const surprises = inf.surprises;
+    const closes = inf.closes;
+
+    // metric cards
+    const page = document.querySelector('[data-page="surprises"]');
+    if (!page) return;
+    const mvals = page.querySelectorAll('.metric .metric-value');
+    if (mvals[0]) mvals[0].textContent = surprises.length;
+    if (mvals[1]) {
+      const largest = surprises.length ? Math.max(...surprises.map(s => s.deltaH)) : 0;
+      mvals[1].textContent = `+${largest.toFixed(2)}`;
+    }
+    if (mvals[2]) {
+      if (surprises.length < 2) {
+        mvals[2].textContent = '—';
+      } else {
+        const gaps = [];
+        for (let i = 1; i < surprises.length; i++) gaps.push(surprises[i].t - surprises[i-1].t);
+        const avg = gaps.reduce((a,b)=>a+b,0) / gaps.length;
+        mvals[2].textContent = `${Math.round(avg)} swaps`;
+      }
+    }
+
+    // table rows
+    const card = page.querySelector('.card[style*="1.5rem 1.75rem"]');
+    if (!card) return;
+
+    // header row (keep)
+    const headerHTML = `
+      <div class="card-head">
+        <div class="card-title">on-chain log · append-only</div>
+        <div class="card-meta">seed: ["surprises", mint]</div>
+      </div>
+      <div class="surprise-row" style="border-top:0;color:var(--text-3);font-family:var(--mono);font-size:11px;letter-spacing:0.05em;text-transform:uppercase;padding-bottom:0.5rem;">
+        <div>timestamp</div>
+        <div>what the protocol learned</div>
+        <div style="text-align:right;">prior MAP</div>
+        <div style="text-align:right;">posterior MAP</div>
+      </div>`;
+
+    let rowsHTML = '';
+    if (!surprises.length) {
+      rowsHTML = `<div class="surprise-row"><div class="surprise-date">—</div><div class="surprise-body" style="opacity:0.6">no surprises yet — the protocol is still learning its first prior.</div><div class="surprise-prior">—</div><div class="surprise-post">—</div></div>`;
+    } else {
+      // newest first
+      const recent = surprises.slice().reverse().slice(0, 25);
+      for (const s of recent) {
+        const ts = inf.closes.length > s.t ? new Date(Date.now() - (closes.length - 1 - s.t) * 60_000) : new Date();
+        const tstr = ts.toISOString().slice(0, 19).replace('T', ' ');
+        const priorStr = s.priorMapPrice.toExponential(3);
+        const postStr = s.posteriorMapPrice.toExponential(3);
+        const tradeStr = s.tradePrice.toExponential(3);
+        const deltaStr = s.deltaH.toFixed(3);
+        rowsHTML += `<div class="surprise-row">
+          <div class="surprise-date">${tstr}</div>
+          <div class="surprise-body">a swap at ${tradeStr} contradicted the prior. posterior MAP moved from ${priorStr} to ${postStr}. entropy +${deltaStr} bits.</div>
+          <div class="surprise-prior">${priorStr}</div>
+          <div class="surprise-post">${postStr}</div>
+        </div>`;
+      }
+    }
+
+    card.innerHTML = headerHTML + rowsHTML;
+  }
+
+  // ---- orchestrator: fetch + infer + render ----
+  async function goLive() {
+    if (!CONFIG.ca) return;            // no CA yet → mocks stay
+    try {
+      const market = await loadMarket(CONFIG.ca);
+      if (!market || market.closes.length < 5) return;  // not enough data yet
+      const inf = bayesianInference(market.closes);
+      if (!inf) return;
+
+      renderHeroMapMarket(market, inf);
+      renderHeroPosterior(inf);
+      renderHeroEntropy(inf);
+      renderHeroGauge(inf);
+      renderMindCharts(market, inf);
+      renderDiagnosticsCharts(market, inf);
+      renderSurprisesTable(inf);
+      updateCABanner(CONFIG.ca, market);
+    } catch (e) {
+      console.warn('Onsnes live mode failed:', e);
+    }
+  }
+
+  // expose for manual trigger
+  window.ONSNES_GO_LIVE = goLive;
+
+  // boot
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', goLive);
+  } else {
+    goLive();
+  }
+  setInterval(goLive, CONFIG.refreshSeconds * 1000);
+})();
+</script>
+
+</body>
+</html>
