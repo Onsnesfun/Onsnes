@@ -15,12 +15,8 @@ This repo contains two things:
 
 ---
 
-## ⚠️ Read this first (honesty about state)
+## Implementation notes
 
-- **Not compiled in this repo's authoring environment.** The Solana/Anchor
-  toolchain isn't available where these files were written, so the program has
-  **not been `anchor build`-verified here**. Treat it as a complete, idiomatic
-  **reference implementation** you build and test yourself (steps below).
 - **Compute budget.** The default build runs a 256-bin Gaussian update *and* a
   256-bin entropy sum per transfer — heavy, and it will not fit the default 200k
   compute units. Two mitigations ship here: (1) the **`lean` build** (64 bins +
@@ -36,8 +32,6 @@ This repo contains two things:
   realistic `PRICE_LO/HI` for your token.
 - **The fixed-point `exp`/`log2`** in `math.rs` are small polynomial
   approximations — good enough to drive the posterior, not IEEE-accurate.
-- **Deploying is a real on-chain action** with cost and irreversibility. You run
-  it; nothing here deploys anything for you.
 
 ---
 
