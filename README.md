@@ -15,7 +15,7 @@
     <img alt="Token-2022" src="https://img.shields.io/badge/standard-Token--2022-14f195?style=flat-square&logo=solana&logoColor=black">
     <img alt="Anchor" src="https://img.shields.io/badge/framework-Anchor-2a52be?style=flat-square">
     <img alt="Rust" src="https://img.shields.io/badge/program-Rust-dea584?style=flat-square&logo=rust&logoColor=black">
-    <img alt="Build" src="https://img.shields.io/badge/frontend-no%20build%20step-ffe14d?style=flat-square&logoColor=black">
+    <img alt="Frontend" src="https://img.shields.io/badge/frontend-vanilla%20JS-ffe14d?style=flat-square&logo=javascript&logoColor=black">
   </p>
 </div>
 
