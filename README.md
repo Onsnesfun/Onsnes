@@ -8,6 +8,8 @@
     <a href="https://onsnesfun.github.io/Onsnes/"><img alt="Website" src="https://img.shields.io/badge/website-onsnes.fun-ffe14d?style=flat-square&logo=googlechrome&logoColor=black"></a>
     <a href="https://x.com/Onsnesfun"><img alt="X / Twitter" src="https://img.shields.io/badge/follow-%40Onsnesfun-1d9bf0?style=flat-square&logo=x&logoColor=white"></a>
     <a href="https://github.com/Onsnesfun/Onsnes"><img alt="GitHub" src="https://img.shields.io/badge/source-GitHub-181717?style=flat-square&logo=github&logoColor=white"></a>
+    <a href="https://github.com/Onsnesfun/Onsnes/releases"><img alt="Release" src="https://img.shields.io/github/v/release/Onsnesfun/Onsnes?style=flat-square&label=release&color=ffe14d"></a>
+    <a href="https://github.com/Onsnesfun/Onsnes/pkgs/container/onsnes"><img alt="Container" src="https://img.shields.io/badge/ghcr.io-image-2496ed?style=flat-square&logo=docker&logoColor=white"></a>
     <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-ffe14d?style=flat-square&logoColor=black"></a>
   </p>
   <p>
