@@ -163,6 +163,78 @@ pub fn bin_to_price_fp(i: usize, bins: usize, lo: i128, hi: i128) -> i128 {
     lo + (hi - lo) * (i as i128) / ((bins as i128) - 1)
 }
 
+/// Nearest bin index for `price` under a linear mapping over [lo, hi].
+pub fn price_to_bin(price: i128, bins: usize, lo: i128, hi: i128) -> usize {
+    if hi <= lo || bins <= 1 {
+        return 0;
+    }
+    let mut p = price;
+    if p < lo {
+        p = lo;
+    }
+    if p > hi {
+        p = hi;
+    }
+    let frac = div_fp(p - lo, hi - lo); // [0, SCALE]
+    let idx = (frac * (bins as i128 - 1) + SCALE / 2) / SCALE;
+    idx.clamp(0, bins as i128 - 1) as usize
+}
+
+/// Precomputed Gaussian likelihood for the CU-optimised `lean` build.
+///
+/// Indexed by bin distance `d` = |i - observed_bin|, the table holds
+/// `exp(-d^2 / 32)` in 1e12 fixed-point — a Gaussian of width ~4 bins over the
+/// 64-bin lean posterior. Using it turns the per-transfer update into 64 table
+/// lookups + multiplies, with no on-chain `exp` calls. Zero past d = 29.
+#[cfg(feature = "lean")]
+pub mod lut {
+    /// exp(-d^2 / 32) * 1e12 for d = 0..63.
+    pub const GAUSS: [i128; 64] = [
+        1_000_000_000_000,
+        969_233_000_000,
+        882_497_000_000,
+        754_840_000_000,
+        606_531_000_000,
+        457_833_000_000,
+        324_652_000_000,
+        216_210_000_000,
+        135_335_000_000,
+        79_559_000_000,
+        43_937_000_000,
+        22_810_000_000,
+        11_109_000_000,
+        5_086_000_000,
+        2_187_000_000,
+        884_000_000,
+        335_000_000,
+        119_500_000,
+        39_950_000,
+        12_570_000,
+        3_727_000,
+        1_036_000,
+        270_000,
+        66_200,
+        15_200,
+        3_280,
+        665,
+        127,
+        23,
+        6,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+
+    /// Gaussian weight at bin distance `d`.
+    #[inline]
+    pub fn weight(d: usize) -> i128 {
+        if d < GAUSS.len() {
+            GAUSS[d]
+        } else {
+            0
+        }
+    }
+}
+
 /// base^exp in fixed-point via exponentiation by squaring (exp may be negative).
 pub fn pow_fp(base: i128, exp: i32) -> i128 {
     let mut result = SCALE;

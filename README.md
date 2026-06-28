@@ -21,15 +21,19 @@ This repo contains two things:
   toolchain isn't available where these files were written, so the program has
   **not been `anchor build`-verified here**. Treat it as a complete, idiomatic
   **reference implementation** you build and test yourself (steps below).
-- **Compute budget.** Running a 256-bin Gaussian update *and* a 256-bin entropy
-  sum inside a transfer hook is heavy — it will not fit the default 200k compute
-  units. For real swaps you must raise the transaction's compute budget and/or
-  reduce `BINS`, precompute the Gaussian into a lookup table, and simplify the
-  entropy/log2 path. The on-chain math here favours clarity over CU-efficiency.
-- **DLMM layout is an assumption.** `programs/onsnes/src/dlmm.rs` reads the
-  active bin id / bin step at fixed byte offsets. The real Meteora DLMM
-  `LbPair` account layout differs — adapt the reader to the deployed pool
-  program before mainnet.
+- **Compute budget.** The default build runs a 256-bin Gaussian update *and* a
+  256-bin entropy sum per transfer — heavy, and it will not fit the default 200k
+  compute units. Two mitigations ship here: (1) the **`lean` build** (64 bins +
+  a table-lookup Gaussian, no on-chain `exp`) — `anchor build -- --features lean`;
+  and (2) you should still raise the swap transaction's compute budget. Even
+  lean, profile before mainnet.
+- **DLMM layout.** `programs/onsnes/src/dlmm.rs` reads `active_id` at account
+  offset **76** and `bin_step` at **80**, derived from the published Meteora
+  `LbPair` layout (MeteoraAg/dlmm-sdk IDL — `StaticParameters` and
+  `VariableParameters` are 32 bytes each; see the offset table in the file).
+  Meteora has revised this struct over time, so **verify against the deployed
+  pool** before mainnet, and add a `10^(decimals_x - decimals_y)` factor +
+  realistic `PRICE_LO/HI` for your token.
 - **The fixed-point `exp`/`log2`** in `math.rs` are small polynomial
   approximations — good enough to drive the posterior, not IEEE-accurate.
 - **Deploying is a real on-chain action** with cost and irreversibility. You run
@@ -55,6 +59,7 @@ anchor keys sync        # generate the program keypair + write its id into
                         # lib.rs (declare_id!) and Anchor.toml — replaces the
                         # 1111…1111 placeholder
 anchor build            # compile the BPF program + generate the IDL/types
+anchor build -- --features lean   # CU-optimised variant: 64 bins + LUT gaussian
 anchor test             # spins up a local validator and runs tests/onsnes.ts
 ```
 

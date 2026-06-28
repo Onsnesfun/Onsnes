@@ -11,6 +11,8 @@ name = "onsnes"
 
 [features]
 default = []
+# CU-optimised build: 64 bins + table-lookup Gaussian (see README).
+lean = []
 cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []

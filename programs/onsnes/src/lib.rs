@@ -33,9 +33,18 @@ use state::*;
 declare_id!("11111111111111111111111111111111");
 
 // ---- protocol constants (baked into the binary, never changed) ----
-/// Number of discrete price hypotheses.
+/// Number of discrete price hypotheses. The `lean` build drops to 64 bins (with
+/// a table-lookup Gaussian) so the per-transfer update fits a tighter compute
+/// budget; the default build keeps the full 256-bin resolution.
+#[cfg(feature = "lean")]
+pub const BINS: usize = 64;
+#[cfg(not(feature = "lean"))]
 pub const BINS: usize = 256;
-/// Maximum entropy: log2(256) = 8 bits.
+
+/// Maximum entropy = log2(BINS): 6 bits (lean) / 8 bits (default).
+#[cfg(feature = "lean")]
+pub const H_MAX_FP: i128 = 6_000_000_000_000;
+#[cfg(not(feature = "lean"))]
 pub const H_MAX_FP: i128 = 8_000_000_000_000;
 /// Confidence floor: 1 bit of irreducible humility.
 pub const H_FLOOR_FP: i128 = 1_000_000_000_000;
@@ -154,10 +163,19 @@ pub mod onsnes {
         let prior_h_fp = post.last_entropy_fp;
         let prior_map = post.last_map_idx;
 
-        // 3. multiply prior by Gaussian likelihood for each candidate price
+        // 3. multiply prior by the Gaussian likelihood for each candidate price.
+        //    lean build: O(BINS) table lookups, no on-chain exp.
+        //    default build: a true fixed-point Gaussian per bin.
+        #[cfg(feature = "lean")]
+        let obs = price_to_bin(trade_price_fp, BINS, PRICE_LO_FP, PRICE_HI_FP);
         for i in 0..BINS {
-            let mu = bin_to_price_fp(i, BINS, PRICE_LO_FP, PRICE_HI_FP);
-            let like = gaussian_fp(trade_price_fp, mu, SIGMA_FP);
+            #[cfg(feature = "lean")]
+            let like = math::lut::weight(if i >= obs { i - obs } else { obs - i });
+            #[cfg(not(feature = "lean"))]
+            let like = {
+                let mu = bin_to_price_fp(i, BINS, PRICE_LO_FP, PRICE_HI_FP);
+                gaussian_fp(trade_price_fp, mu, SIGMA_FP)
+            };
             post.p_fp[i] = mul_fp(post.p_fp[i], like);
         }
 

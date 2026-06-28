@@ -2121,145 +2121,130 @@ declare_id!(<span class="s">"JayneSLogicScienceProgRamAddRess111111111111"</span
   function renderHeroMapMarket(market, inf) {
     const svg = document.getElementById('hero-mapmarket'); if (!svg) return;
     const W = 720, H = 260, ML = 56, MR = 18, MT = 22, MB = 32;
-    const series = inf.closes.slice(-100);
-    const mapSeries = inf.mapHistory.slice(-series.length);
-    const bandLow = inf.bandLowHistory.slice(-series.length);
-    const bandHigh = inf.bandHighHistory.slice(-series.length);
-    const N = series.length;
-    if (N < 2) return;
+    const PW = W - ML - MR, PH = H - MT - MB;
+    const map = inf.mapHistory.slice(-100);
+    const bandLo = inf.bandLowHistory.slice(-map.length);
+    const bandHi = inf.bandHighHistory.slice(-map.length);
+    const COLS = map.length;
+    if (COLS < 2) return;
 
-    const allVals = series.concat(mapSeries, bandLow, bandHigh);
-    const lo = Math.min(...allVals), hi = Math.max(...allVals);
-    const pad = (hi - lo) * 0.08 || hi * 0.02;
-    const ylo = lo - pad, yhi = hi + pad;
-    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
-    const yAt = v => MT + (1 - (v - ylo) / (yhi - ylo)) * (H - MT - MB);
+    let lo = Math.min(...bandLo, ...map), hi = Math.max(...bandHi, ...map);
+    const pad = (hi - lo) * 0.08 || hi * 0.02; lo -= pad; hi += pad;
+    const ROWS = 30, cw = PW / COLS, ch = PH / ROWS;
+    const yOf = price => (hi - price) / (hi - lo); // 0 top .. 1 bottom
 
-    let band = `M ${xAt(0).toFixed(1)},${yAt(bandHigh[0]).toFixed(1)} `;
-    for (let i = 1; i < N; i++) band += `L ${xAt(i).toFixed(1)},${yAt(bandHigh[i]).toFixed(1)} `;
-    for (let i = N - 1; i >= 0; i--) band += `L ${xAt(i).toFixed(1)},${yAt(bandLow[i]).toFixed(1)} `;
-    band += 'Z';
-
-    let mapLine = '', mktDots = '';
-    for (let i = 0; i < N; i++) {
-      mapLine += `${xAt(i).toFixed(1)},${yAt(mapSeries[i]).toFixed(1)} `;
-      mktDots += `<circle cx="${xAt(i).toFixed(1)}" cy="${yAt(series[i]).toFixed(1)}" r="2" fill="${STYLE.C_LINE2}" opacity="0.85"/>`;
+    let cells = '', mapPts = '';
+    for (let c = 0; c < COLS; c++) {
+      const mu = map[c];
+      const sigma = Math.max((bandHi[c] - bandLo[c]) / 4, (hi - lo) / 80);
+      let colMax = 0; const col = [];
+      for (let r = 0; r < ROWS; r++) {
+        const price = hi - (r + 0.5) / ROWS * (hi - lo);
+        const d = (price - mu) / sigma;
+        const v = Math.exp(-0.5 * d * d);
+        col.push(v); if (v > colMax) colMax = v;
+      }
+      const x = ML + c * cw;
+      for (let r = 0; r < ROWS; r++) {
+        const op = Math.pow(col[r] / colMax, 1.7) * 0.92;
+        if (op < 0.025) continue;
+        cells += `<rect x="${x.toFixed(1)}" y="${(MT + r * ch).toFixed(1)}" width="${(cw + 0.6).toFixed(1)}" height="${(ch + 0.6).toFixed(1)}" fill="${STYLE.C_LINE}" opacity="${op.toFixed(3)}"/>`;
+      }
+      mapPts += `${(x + cw / 2).toFixed(1)},${(MT + yOf(mu) * PH).toFixed(1)} `;
     }
-    const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${STYLE.C_GRID}" stroke-width="0.5"/>`;
+    const mapLine = `<polyline points="${mapPts.trim()}" fill="none" stroke="#ffffff" stroke-width="1.4" opacity="0.9"/>`;
     const yLhi = `<text x="${ML - 10}" y="${MT + 12}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
     const yLlo = `<text x="${ML - 10}" y="${H - MB - 4}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">low</text>`;
-    const xLs = `<text x="${ML}" y="${H - 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">${N} swaps ago</text>`;
+    const xLs = `<text x="${ML}" y="${H - 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">${COLS} blocks ago</text>`;
     const xLe = `<text x="${W - MR}" y="${H - 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
     const legend = `<g font-family="ui-monospace,monospace" font-size="11">
-      <line x1="${W - MR - 280}" y1="${MT + 8}" x2="${W - MR - 256}" y2="${MT + 8}" stroke="${STYLE.C_LINE}" stroke-width="2"/><text x="${W - MR - 250}" y="${MT + 12}" fill="${STYLE.C_TXT}">protocol's best guess</text>
-      <circle cx="${W - MR - 75}" cy="${MT + 8}" r="2.5" fill="${STYLE.C_LINE2}"/><text x="${W - MR - 65}" y="${MT + 12}" fill="${STYLE.C_TXT}">actual trade</text>
+      <rect x="${W - MR - 250}" y="${MT + 2}" width="12" height="9" fill="${STYLE.C_LINE}" opacity="0.7"/><text x="${W - MR - 232}" y="${MT + 11}" fill="${STYLE.C_TXT}">belief density</text>
+      <line x1="${W - MR - 132}" y1="${MT + 7}" x2="${W - MR - 108}" y2="${MT + 7}" stroke="#ffffff" stroke-width="1.4"/><text x="${W - MR - 102}" y="${MT + 11}" fill="${STYLE.C_TXT}">most-likely price</text>
     </g>`;
-    svg.innerHTML = axis +
-      `<path d="${band}" fill="${STYLE.C_LINE}" opacity="0.18"/>` +
-      `<polyline points="${mapLine.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.8"/>` +
-      mktDots + yLhi + yLlo + xLs + xLe + legend;
+    svg.innerHTML = cells + mapLine + yLhi + yLlo + xLs + xLe + legend;
 
-    // update card-meta "tracking: XX%"
     const meta = svg.closest('.card')?.querySelector('.card-meta');
-    if (meta && /tracking/.test(meta.textContent)) {
+    if (meta && /tracking|drift/.test(meta.textContent)) {
       meta.textContent = `tracking: ${(inf.calibration * 100).toFixed(1)}%`;
     }
   }
 
-  // ---- live render: hero posterior (mini) ----
+  // ---- live render: hero posterior (mini) — bar histogram ----
   function renderHeroPosterior(inf) {
     const svg = document.getElementById('hero-posterior'); if (!svg) return;
     const W = 400, H = 140, ML = 28, MR = 14, MT = 14, MB = 24;
-    const p = inf.posterior;
-    const N = p.length;
-    let max = 0;
-    for (let i = 0; i < N; i++) if (p[i] > max) max = p[i];
+    const PW = W - ML - MR, PH = H - MT - MB;
+    const p = inf.posterior, N = p.length;
+    let max = 0, mapIdx = 0;
+    for (let i = 0; i < N; i++) if (p[i] > max) { max = p[i]; mapIdx = i; }
     if (max <= 0) return;
 
-    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
-    const yAt = v => MT + (1 - v / max) * (H - MT - MB);
-
-    let area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
-    let line = '';
+    const bw = PW / N;
+    let bars = '';
     for (let i = 0; i < N; i++) {
-      const x = xAt(i).toFixed(1), y = yAt(p[i]).toFixed(1);
-      area += `L ${x},${y} `;
-      line += `${x},${y} `;
+      const h = (p[i] / max) * PH;
+      const x = ML + i * bw, y = MT + PH - h;
+      bars += `<rect x="${(x + 0.3).toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(0.6, bw - 0.6).toFixed(1)}" height="${h.toFixed(1)}" fill="${STYLE.C_LINE}" opacity="${i === mapIdx ? '0.95' : '0.4'}"/>`;
     }
-    area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
-
-    let mapIdx = 0; for (let i = 1; i < N; i++) if (p[i] > p[mapIdx]) mapIdx = i;
-    const mapX = xAt(mapIdx), mapY = yAt(p[mapIdx]);
-    const mapDash = `<line x1="${mapX.toFixed(1)}" y1="${MT}" x2="${mapX.toFixed(1)}" y2="${H - MB}" stroke="${STYLE.C_LINE}" stroke-width="1" stroke-dasharray="2 3" opacity="0.55"/>`;
-    const mapDot = `<circle cx="${mapX.toFixed(1)}" cy="${mapY.toFixed(1)}" r="3" fill="${STYLE.C_LINE}"/>`;
     const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${STYLE.C_GRID}" stroke-width="0.5"/>`;
+    const mapX = ML + mapIdx * bw + bw / 2;
+    const mapLabel = `<text x="${mapX.toFixed(1)}" y="${MT + 9}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">MAP</text>`;
     const xL = `<text x="${ML}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">low</text>`;
     const xR = `<text x="${W - MR}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">high</text>`;
-    const yL = `<text x="${ML - 4}" y="${MT + 10}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">P</text>`;
-
-    svg.innerHTML = axis +
-      `<path d="${area}" fill="${STYLE.C_LINE}" opacity="0.18"/>` +
-      `<polyline points="${line.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.6"/>` +
-      mapDash + mapDot + xL + xR + yL;
+    svg.innerHTML = axis + bars + mapLabel + xL + xR;
   }
 
-  // ---- live render: hero entropy decay (mini) ----
+  // ---- live render: knowledge gained (mini) — ascending bits-learned bars ----
   function renderHeroEntropy(inf) {
     const svg = document.getElementById('hero-entropy'); if (!svg) return;
     const W = 400, H = 140, ML = 36, MR = 14, MT = 18, MB = 24;
-    const hist = inf.entropyHistory.slice(-120);
+    const PW = W - ML - MR, PH = H - MT - MB;
+    const hist = inf.entropyHistory.slice(-60);
     const N = hist.length;
     if (N < 2) return;
 
     const H0 = inf.H0;
-    const minVal = Math.max(1, Math.min(...hist) - 0.05);
-    const maxVal = Math.max(H0 + 0.05, Math.max(...hist));
-    const xAt = i => ML + (i / (N - 1)) * (W - ML - MR);
-    const yAt = v => MT + (1 - (v - minVal) / (maxVal - minVal)) * (H - MT - MB);
-
-    let poly = '', area = `M ${xAt(0).toFixed(1)},${(H - MB).toFixed(1)} `;
+    const learned = hist.map(h => Math.max(0, H0 - h));
+    const hi = Math.max(0.1, Math.max(...learned) * 1.15);
+    const bw = PW / N;
+    let bars = '';
     for (let i = 0; i < N; i++) {
-      const x = xAt(i).toFixed(1), y = yAt(hist[i]).toFixed(1);
-      poly += `${x},${y} `; area += `L ${x},${y} `;
+      const h = (learned[i] / hi) * PH;
+      const x = ML + i * bw, y = MT + PH - h;
+      const op = (0.35 + 0.55 * (i / (N - 1))).toFixed(2);
+      bars += `<rect x="${(x + 0.5).toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(0.6, bw - 1).toFixed(1)}" height="${h.toFixed(1)}" fill="${STYLE.C_LINE}" opacity="${op}"/>`;
     }
-    area += `L ${xAt(N - 1).toFixed(1)},${(H - MB).toFixed(1)} Z`;
-
-    const cur = hist[N - 1];
-    const yTop = `<text x="${ML - 6}" y="${yAt(H0) + 4}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${H0.toFixed(1)}</text>`;
-    const yCur = `<text x="${ML - 6}" y="${yAt(cur) + 4}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${cur.toFixed(2)}</text>`;
-    const ref = `<line x1="${ML}" y1="${yAt(H0)}" x2="${W - MR}" y2="${yAt(H0)}" stroke="${STYLE.C_GRID}" stroke-width="0.5" stroke-dasharray="2 3"/>`;
+    const axis = `<line x1="${ML}" y1="${H - MB}" x2="${W - MR}" y2="${H - MB}" stroke="${STYLE.C_GRID}" stroke-width="0.5"/>`;
+    const cur = learned[N - 1];
+    const yC = `<text x="${ML - 6}" y="${MT + 12}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">${cur.toFixed(2)}</text>`;
+    const yZ = `<text x="${ML - 6}" y="${H - MB}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">0</text>`;
     const xLs = `<text x="${ML}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11">start</text>`;
     const xLe = `<text x="${W - MR}" y="${H - 8}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="11" text-anchor="end">now</text>`;
-
-    svg.innerHTML = ref +
-      `<path d="${area}" fill="${STYLE.C_LINE}" opacity="0.12"/>` +
-      `<polyline points="${poly.trim()}" fill="none" stroke="${STYLE.C_LINE}" stroke-width="1.5"/>` +
-      yTop + yCur + xLs + xLe;
+    svg.innerHTML = axis + bars + yC + yZ + xLs + xLe;
   }
 
-  // ---- live render: hero maturity gauge (mini) ----
+  // ---- live render: confidence (mini) — radial tick gauge ----
   function renderHeroGauge(inf) {
     const svg = document.getElementById('hero-gauge'); if (!svg) return;
     const pct = Math.max(0, Math.min(1, inf.learned));
-    const cx = 70, cy = 74, r = 50;
-    const a0 = -Math.PI * 0.78, a1 = Math.PI * 0.78;
-    const a = a0 + (a1 - a0) * pct;
-    function arc(start, end, color, width, cap) {
-      const x0 = cx + r * Math.cos(start), y0 = cy + r * Math.sin(start);
-      const x1 = cx + r * Math.cos(end), y1 = cy + r * Math.sin(end);
-      const large = (end - start) > Math.PI ? 1 : 0;
-      return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="${cap}"/>`;
+    const cx = 70, cy = 70, r = 52, TICKS = 44;
+    const lit = Math.max(pct > 0 ? 1 : 0, Math.round(pct * TICKS));
+    let ticks = '';
+    for (let i = 0; i < TICKS; i++) {
+      const ang = -Math.PI / 2 + (i / TICKS) * Math.PI * 2;
+      const on = i < lit;
+      const r1 = r - 9, r2 = r;
+      const x1 = cx + r1 * Math.cos(ang), y1 = cy + r1 * Math.sin(ang);
+      const x2 = cx + r2 * Math.cos(ang), y2 = cy + r2 * Math.sin(ang);
+      ticks += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${on ? STYLE.C_LINE : 'rgba(255,255,255,0.10)'}" stroke-width="2.6" stroke-linecap="round"/>`;
     }
-    const bg = arc(a0, a1, STYLE.C_BG, 9, 'butt');
-    const fg = pct > 0.001 ? arc(a0, a, STYLE.C_LINE, 9, 'butt') : '';
     const pctNum = Math.round(pct * 100);
-    const label = `<text x="${cx}" y="${cy + 4}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="26" font-weight="500" text-anchor="middle">${pctNum}%</text>` +
-                  `<text x="${cx}" y="${cy + 22}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">learned</text>`;
-    svg.innerHTML = bg + fg + label;
+    const label = `<text x="${cx}" y="${cy + 3}" fill="${STYLE.C_LINE}" font-family="ui-monospace,monospace" font-size="26" font-weight="500" text-anchor="middle">${pctNum}%</text>` +
+                  `<text x="${cx}" y="${cy + 21}" fill="${STYLE.C_TXT}" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">learned</text>`;
+    svg.innerHTML = ticks + label;
 
-    // also update the card-meta "maturity"  → percent
     const meta = svg.closest('.card')?.querySelector('.card-meta');
-    if (meta && meta.textContent.trim() === 'maturity') {
+    if (meta && /maturity/.test(meta.textContent)) {
       meta.textContent = `maturity · ${pctNum}%`;
     }
   }
