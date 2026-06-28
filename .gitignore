@@ -4,3 +4,18 @@ BBB.png
 
 # tooling
 .playwright-mcp/
+
+# rust / anchor
+target/
+**/*.rs.bk
+test-ledger/
+.anchor/
+
+# node
+node_modules/
+.yarn/
+
+# solana keypairs — never commit these
+*-keypair.json
+wallet.json
+id.json
